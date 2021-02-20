@@ -38,7 +38,6 @@ RUN go install \
   github.com/go-openapi/runtime \
   github.com/tylerb/graceful \
   github.com/jessevdk/go-flags \
-  github.com/micro/protoc-gen-micro/v2 \
   github.com/golang/protobuf/protoc-gen-go \
   github.com/go-swagger/go-swagger/cmd/swagger
 

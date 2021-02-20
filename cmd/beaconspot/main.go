@@ -4,10 +4,6 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	// We need these imports to register NATS broker, registry, and transport.
-	// This type is defined through evars in docker-compose.yaml file.
-	_ "github.com/micro/go-plugins/transport/grpc/v2"
-
 	"github.com/begmaroman/beaconspot/grpcapi/microservice"
 	"github.com/begmaroman/beaconspot/utils/logex"
 )
