@@ -1,27 +1,27 @@
 package microservice
 
 import (
-	"github.com/begmaroman/beaconspot/beaconchain"
-	"github.com/begmaroman/beaconspot/beaconchain/combined"
-	"github.com/begmaroman/beaconspot/beaconchain/lighthouse"
-	"github.com/begmaroman/beaconspot/beaconchain/prysm"
-	"github.com/begmaroman/beaconspot/utils/grpcex"
 	"github.com/bloxapp/eth2-key-manager/core"
 	"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 
+	"github.com/begmaroman/beaconspot/beaconchain"
+	"github.com/begmaroman/beaconspot/beaconchain/combined"
+	"github.com/begmaroman/beaconspot/beaconchain/lighthouse"
+	"github.com/begmaroman/beaconspot/beaconchain/prysm"
 	"github.com/begmaroman/beaconspot/grpcapi"
-	grpcapiproto "github.com/begmaroman/beaconspot/proto/grpcapi"
+	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 	"github.com/begmaroman/beaconspot/proto/health"
+	"github.com/begmaroman/beaconspot/utils/grpcex"
 	"github.com/begmaroman/beaconspot/utils/healthchecker"
 )
 
 // MicroService is the micro-service.
 type MicroService struct {
 	svc     micro.Service
-	handler grpcapiproto.BeaconSpotServiceHandler
+	handler beaconspotproto.BeaconSpotServiceHandler
 }
 
 // Init initializes the service.
@@ -58,7 +58,7 @@ func Init(clientOpts *ClientOptions) (*MicroService, error) {
 // New is the constructor of the service.
 func New(svc micro.Service, clientOpts *ClientOptions) (*MicroService, error) {
 	// Create a self-pinger client.
-	selfPingClient := health.NewSelfPingClient(svc, grpcapiproto.NewBeaconSpotService(clientOpts.Name, svc.Client()))
+	selfPingClient := health.NewSelfPingClient(svc, beaconspotproto.NewBeaconSpotService(clientOpts.Name, svc.Client()))
 
 	var clients []beaconchain.BeaconChain
 
@@ -95,7 +95,7 @@ func New(svc micro.Service, clientOpts *ClientOptions) (*MicroService, error) {
 	})
 
 	// Register the service.
-	if err := grpcapiproto.RegisterBeaconSpotServiceHandler(svc.Server(), handler); err != nil {
+	if err := beaconspotproto.RegisterBeaconSpotServiceHandler(svc.Server(), handler); err != nil {
 		return nil, errors.Wrap(err, "failed to register RPC handler")
 	}
 

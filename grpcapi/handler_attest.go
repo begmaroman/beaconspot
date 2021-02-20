@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 
-	grpcapiproto "github.com/begmaroman/beaconspot/proto/grpcapi"
+	grpcapiproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 )
 
 func (h *handler) GetAttestation(ctx context.Context, req *grpcapiproto.GetAttestationRequest, resp *grpcapiproto.GetAttestationResponse) error {

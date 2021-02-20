@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/begmaroman/beaconspot/beaconchain"
-	grpcapiproto "github.com/begmaroman/beaconspot/proto/grpcapi"
+	grpcapiproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 	"github.com/begmaroman/beaconspot/proto/health"
 )
 
