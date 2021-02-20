@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "github.com/begmaroman/beaconspot/proto/grpcapi;grpcapiproto";
+
+package grpcapiproto;
+
+import "eth/v1alpha1/attestation.proto";
+import "google/protobuf/empty.proto";
+import "github.com/begmaroman/beaconspot/proto/health/health.proto";
+import "github.com/begmaroman/beaconspot/proto/status/status.proto";
+
+service BeaconSpotService {
+    rpc Health(google.protobuf.Empty) returns (health.HealthResponse) {}
+    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+    // Attester
+    rpc GetAttestation(GetAttestationRequest) returns (GetAttestationResponse) {}
+    rpc ProposeAttestation(ProposeAttestationRequest) returns (ProposeAttestationResponse) {}
+}
+
+// GetAttestation operation
+message GetAttestationRequest {
+    uint64 slot = 1;
+    uint64 committee_index = 2;
+}
+
+message GetAttestationResponse {
+    oneof result {
+        Status error = 1;
+        ethereum.eth.v1alpha1.AttestationData attestation_data = 2;
+    }
+}
+
+// ProposeAttestation operation
+message ProposeAttestationRequest {
+    ethereum.eth.v1alpha1.AttestationData attestation_data = 1;
+    bytes aggregation_bits = 2;
+    bytes signature = 3;
+}
+
+message ProposeAttestationResponse {
+    oneof result {
+        Status error = 1;
+        google.protobuf.Empty empty = 2;
+    }
+}

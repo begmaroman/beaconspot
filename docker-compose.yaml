@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+
+  grpc-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      DOCKER_COMPOSE: "true"
+      # Beacon chain clients addresses
+      BC_PRYSM_ADDRS: ${BC_PRYSM_ADDRS}
+      BC_LIGHTHOUSE_ADDRS: ${BC_LIGHTHOUSE_ADDRS}
+    networks:
+      - beaconspot-docker
+    restart: always
+
+networks:
+  beaconspot-docker:
+    driver: bridge
+    name: beaconspot-docker
