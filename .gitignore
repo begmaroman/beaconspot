@@ -15,6 +15,3 @@
 # vendor/
 
 .idea
-*.generated.go
-*.pb.go
-*.micro.go
