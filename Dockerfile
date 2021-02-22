@@ -49,11 +49,8 @@ COPY . .
  # Remove vendored deps
 RUN rm -rf ./vendor
 
-# Generate protobuf go files on build trigger.
-RUN ./scripts/generate.sh .
-
 # Install the service binary.
-RUN CGO_ENABLED=0 GOOS=linux go install ./cmd/beaconspot
+RUN CGO_CFLAGS_ALLOW="-D__BLST_PORTABLE__" CGO_CFLAGS="-D__BLST_PORTABLE__" CGO_ENABLED=1 GOOS=linux go install -a -tags blst_enabled -ldflags "-linkmode external -extldflags \"-static -lm  -msoft-float -Wl,-y,__sigsetjmp_aux\"" ./cmd/beaconspot
 
 # Stage 2: Prepare all required data to run the service.
 FROM alpine:3.9 as runner
