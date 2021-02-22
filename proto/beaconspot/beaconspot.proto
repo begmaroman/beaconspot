@@ -16,6 +16,10 @@ service BeaconSpotService {
     // Attester
     rpc GetAttestation(GetAttestationRequest) returns (GetAttestationResponse) {}
     rpc ProposeAttestation(ProposeAttestationRequest) returns (ProposeAttestationResponse) {}
+
+    // Aggregate
+    rpc GetAggregateSelectionProof(GetAggregateSelectionProofRequest) returns (GetAggregateSelectionProofResponse) {}
+    rpc SubmitSignedAggregateSelectionProof(SubmitSignedAggregateSelectionProofRequest) returns (SubmitSignedAggregateSelectionProofResponse) {}
 }
 
 // GetAttestation operation
@@ -39,6 +43,34 @@ message ProposeAttestationRequest {
 }
 
 message ProposeAttestationResponse {
+    oneof result {
+        Status error = 1;
+        google.protobuf.Empty empty = 2;
+    }
+}
+
+// GetAggregateSelectionProof operation
+message GetAggregateSelectionProofRequest {
+    uint64 slot = 1;
+    uint64 committee_index = 2;
+    bytes public_key = 3;
+    bytes signature = 4;
+}
+
+message GetAggregateSelectionProofResponse {
+    oneof result {
+        Status error = 1;
+        ethereum.eth.v1alpha1.AggregateAttestationAndProof data = 2;
+    }
+}
+
+// GetAggregateSelectionProof operation
+message SubmitSignedAggregateSelectionProofRequest {
+    bytes signature = 1;
+    ethereum.eth.v1alpha1.AggregateAttestationAndProof data = 2;
+}
+
+message SubmitSignedAggregateSelectionProofResponse {
     oneof result {
         Status error = 1;
         google.protobuf.Empty empty = 2;

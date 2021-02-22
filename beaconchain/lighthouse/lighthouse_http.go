@@ -182,8 +182,8 @@ func (n *lighthouseHTTP) ProposeBlock(ctx context.Context, signature []byte, blo
 	return nil
 }
 
-// SubmitAggregateSelectionProof returns aggregated attestation
-func (n *lighthouseHTTP) SubmitAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+// GetAggregateSelectionProof returns aggregated attestation
+func (n *lighthouseHTTP) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	attestationData, err := n.GetAttestationData(ctx, slot, committeeIndex)
 	if err != nil {
 		n.logger.Error("LightHouse: failed to get attestation data", zap.Error(err))

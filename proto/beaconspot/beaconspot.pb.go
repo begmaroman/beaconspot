@@ -314,6 +314,296 @@ func (*ProposeAttestationResponse_Error) isProposeAttestationResponse_Result() {
 
 func (*ProposeAttestationResponse_Empty) isProposeAttestationResponse_Result() {}
 
+// GetAggregateSelectionProof operation
+type GetAggregateSelectionProofRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Slot           uint64 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
+	CommitteeIndex uint64 `protobuf:"varint,2,opt,name=committee_index,json=committeeIndex,proto3" json:"committee_index,omitempty"`
+	PublicKey      []byte `protobuf:"bytes,3,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
+	Signature      []byte `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature,omitempty"`
+}
+
+func (x *GetAggregateSelectionProofRequest) Reset() {
+	*x = GetAggregateSelectionProofRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAggregateSelectionProofRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAggregateSelectionProofRequest) ProtoMessage() {}
+
+func (x *GetAggregateSelectionProofRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAggregateSelectionProofRequest.ProtoReflect.Descriptor instead.
+func (*GetAggregateSelectionProofRequest) Descriptor() ([]byte, []int) {
+	return file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetAggregateSelectionProofRequest) GetSlot() uint64 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *GetAggregateSelectionProofRequest) GetCommitteeIndex() uint64 {
+	if x != nil {
+		return x.CommitteeIndex
+	}
+	return 0
+}
+
+func (x *GetAggregateSelectionProofRequest) GetPublicKey() []byte {
+	if x != nil {
+		return x.PublicKey
+	}
+	return nil
+}
+
+func (x *GetAggregateSelectionProofRequest) GetSignature() []byte {
+	if x != nil {
+		return x.Signature
+	}
+	return nil
+}
+
+type GetAggregateSelectionProofResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to Result:
+	//	*GetAggregateSelectionProofResponse_Error
+	//	*GetAggregateSelectionProofResponse_Data
+	Result isGetAggregateSelectionProofResponse_Result `protobuf_oneof:"result"`
+}
+
+func (x *GetAggregateSelectionProofResponse) Reset() {
+	*x = GetAggregateSelectionProofResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAggregateSelectionProofResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAggregateSelectionProofResponse) ProtoMessage() {}
+
+func (x *GetAggregateSelectionProofResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAggregateSelectionProofResponse.ProtoReflect.Descriptor instead.
+func (*GetAggregateSelectionProofResponse) Descriptor() ([]byte, []int) {
+	return file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDescGZIP(), []int{5}
+}
+
+func (m *GetAggregateSelectionProofResponse) GetResult() isGetAggregateSelectionProofResponse_Result {
+	if m != nil {
+		return m.Result
+	}
+	return nil
+}
+
+func (x *GetAggregateSelectionProofResponse) GetError() *status.Status {
+	if x, ok := x.GetResult().(*GetAggregateSelectionProofResponse_Error); ok {
+		return x.Error
+	}
+	return nil
+}
+
+func (x *GetAggregateSelectionProofResponse) GetData() *v1alpha1.AggregateAttestationAndProof {
+	if x, ok := x.GetResult().(*GetAggregateSelectionProofResponse_Data); ok {
+		return x.Data
+	}
+	return nil
+}
+
+type isGetAggregateSelectionProofResponse_Result interface {
+	isGetAggregateSelectionProofResponse_Result()
+}
+
+type GetAggregateSelectionProofResponse_Error struct {
+	Error *status.Status `protobuf:"bytes,1,opt,name=error,proto3,oneof"`
+}
+
+type GetAggregateSelectionProofResponse_Data struct {
+	Data *v1alpha1.AggregateAttestationAndProof `protobuf:"bytes,2,opt,name=data,proto3,oneof"`
+}
+
+func (*GetAggregateSelectionProofResponse_Error) isGetAggregateSelectionProofResponse_Result() {}
+
+func (*GetAggregateSelectionProofResponse_Data) isGetAggregateSelectionProofResponse_Result() {}
+
+// GetAggregateSelectionProof operation
+type SubmitSignedAggregateSelectionProofRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Signature []byte                                 `protobuf:"bytes,1,opt,name=signature,proto3" json:"signature,omitempty"`
+	Data      *v1alpha1.AggregateAttestationAndProof `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+}
+
+func (x *SubmitSignedAggregateSelectionProofRequest) Reset() {
+	*x = SubmitSignedAggregateSelectionProofRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SubmitSignedAggregateSelectionProofRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitSignedAggregateSelectionProofRequest) ProtoMessage() {}
+
+func (x *SubmitSignedAggregateSelectionProofRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitSignedAggregateSelectionProofRequest.ProtoReflect.Descriptor instead.
+func (*SubmitSignedAggregateSelectionProofRequest) Descriptor() ([]byte, []int) {
+	return file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SubmitSignedAggregateSelectionProofRequest) GetSignature() []byte {
+	if x != nil {
+		return x.Signature
+	}
+	return nil
+}
+
+func (x *SubmitSignedAggregateSelectionProofRequest) GetData() *v1alpha1.AggregateAttestationAndProof {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type SubmitSignedAggregateSelectionProofResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to Result:
+	//	*SubmitSignedAggregateSelectionProofResponse_Error
+	//	*SubmitSignedAggregateSelectionProofResponse_Empty
+	Result isSubmitSignedAggregateSelectionProofResponse_Result `protobuf_oneof:"result"`
+}
+
+func (x *SubmitSignedAggregateSelectionProofResponse) Reset() {
+	*x = SubmitSignedAggregateSelectionProofResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SubmitSignedAggregateSelectionProofResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitSignedAggregateSelectionProofResponse) ProtoMessage() {}
+
+func (x *SubmitSignedAggregateSelectionProofResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitSignedAggregateSelectionProofResponse.ProtoReflect.Descriptor instead.
+func (*SubmitSignedAggregateSelectionProofResponse) Descriptor() ([]byte, []int) {
+	return file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDescGZIP(), []int{7}
+}
+
+func (m *SubmitSignedAggregateSelectionProofResponse) GetResult() isSubmitSignedAggregateSelectionProofResponse_Result {
+	if m != nil {
+		return m.Result
+	}
+	return nil
+}
+
+func (x *SubmitSignedAggregateSelectionProofResponse) GetError() *status.Status {
+	if x, ok := x.GetResult().(*SubmitSignedAggregateSelectionProofResponse_Error); ok {
+		return x.Error
+	}
+	return nil
+}
+
+func (x *SubmitSignedAggregateSelectionProofResponse) GetEmpty() *empty.Empty {
+	if x, ok := x.GetResult().(*SubmitSignedAggregateSelectionProofResponse_Empty); ok {
+		return x.Empty
+	}
+	return nil
+}
+
+type isSubmitSignedAggregateSelectionProofResponse_Result interface {
+	isSubmitSignedAggregateSelectionProofResponse_Result()
+}
+
+type SubmitSignedAggregateSelectionProofResponse_Error struct {
+	Error *status.Status `protobuf:"bytes,1,opt,name=error,proto3,oneof"`
+}
+
+type SubmitSignedAggregateSelectionProofResponse_Empty struct {
+	Empty *empty.Empty `protobuf:"bytes,2,opt,name=empty,proto3,oneof"`
+}
+
+func (*SubmitSignedAggregateSelectionProofResponse_Error) isSubmitSignedAggregateSelectionProofResponse_Result() {
+}
+
+func (*SubmitSignedAggregateSelectionProofResponse_Empty) isSubmitSignedAggregateSelectionProofResponse_Result() {
+}
+
 var File_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto protoreflect.FileDescriptor
 
 var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDesc = []byte{
@@ -370,34 +660,90 @@ var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawD
 	0x70, 0x74, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74,
 	0x79, 0x48, 0x00, 0x52, 0x05, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x08, 0x0a, 0x06, 0x72, 0x65,
-	0x73, 0x75, 0x6c, 0x74, 0x32, 0xdf, 0x02, 0x0a, 0x11, 0x42, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x53,
-	0x70, 0x6f, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x06, 0x48, 0x65,
-	0x61, 0x6c, 0x74, 0x68, 0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x16, 0x2e, 0x68,
-	0x65, 0x61, 0x6c, 0x74, 0x68, 0x2e, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x04, 0x50, 0x69, 0x6e, 0x67, 0x12, 0x16,
-	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
-	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00,
-	0x12, 0x63, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x12, 0x26, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x62, 0x65, 0x61,
-	0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74,
-	0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x6f, 0x0a, 0x12, 0x50, 0x72, 0x6f, 0x70, 0x6f, 0x73, 0x65,
-	0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2a, 0x2e, 0x62, 0x65,
-	0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x72,
-	0x6f, 0x70, 0x6f, 0x73, 0x65, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2b, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e,
-	0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x72, 0x6f, 0x70, 0x6f, 0x73,
-	0x65, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x43, 0x5a, 0x41, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x65, 0x67, 0x6d, 0x61, 0x72, 0x6f, 0x6d, 0x61, 0x6e, 0x2f,
-	0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2f, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x3b, 0x62, 0x65, 0x61, 0x63,
-	0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x73, 0x75, 0x6c, 0x74, 0x22, 0x9d, 0x01, 0x0a, 0x21, 0x47, 0x65, 0x74, 0x41, 0x67, 0x67, 0x72,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72,
+	0x6f, 0x6f, 0x66, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x6c,
+	0x6f, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x6c, 0x6f, 0x74, 0x12, 0x27,
+	0x0a, 0x0f, 0x63, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x74, 0x65, 0x65, 0x5f, 0x69, 0x6e, 0x64, 0x65,
+	0x78, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0e, 0x63, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x74,
+	0x65, 0x65, 0x49, 0x6e, 0x64, 0x65, 0x78, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x75, 0x62, 0x6c, 0x69,
+	0x63, 0x5f, 0x6b, 0x65, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x70, 0x75, 0x62,
+	0x6c, 0x69, 0x63, 0x4b, 0x65, 0x79, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74,
+	0x75, 0x72, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61,
+	0x74, 0x75, 0x72, 0x65, 0x22, 0x9a, 0x01, 0x0a, 0x22, 0x47, 0x65, 0x74, 0x41, 0x67, 0x67, 0x72,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72,
+	0x6f, 0x6f, 0x66, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x05, 0x65,
+	0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x53, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x49, 0x0a, 0x04,
+	0x64, 0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x33, 0x2e, 0x65, 0x74, 0x68,
+	0x65, 0x72, 0x65, 0x75, 0x6d, 0x2e, 0x65, 0x74, 0x68, 0x2e, 0x76, 0x31, 0x61, 0x6c, 0x70, 0x68,
+	0x61, 0x31, 0x2e, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x41, 0x74, 0x74, 0x65,
+	0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x41, 0x6e, 0x64, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x48,
+	0x00, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x42, 0x08, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
+	0x74, 0x22, 0x93, 0x01, 0x0a, 0x2a, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x53, 0x69, 0x67, 0x6e,
+	0x65, 0x64, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x1c, 0x0a, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x12, 0x47,
+	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x33, 0x2e, 0x65,
+	0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x2e, 0x65, 0x74, 0x68, 0x2e, 0x76, 0x31, 0x61, 0x6c,
+	0x70, 0x68, 0x61, 0x31, 0x2e, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x41, 0x74,
+	0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x41, 0x6e, 0x64, 0x50, 0x72, 0x6f, 0x6f,
+	0x66, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x88, 0x01, 0x0a, 0x2b, 0x53, 0x75, 0x62, 0x6d,
+	0x69, 0x74, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74,
+	0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x48,
+	0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x2e, 0x0a, 0x05, 0x65, 0x6d, 0x70, 0x74,
+	0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x48,
+	0x00, 0x52, 0x05, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x08, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75,
+	0x6c, 0x74, 0x32, 0x8e, 0x05, 0x0a, 0x11, 0x42, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x53, 0x70, 0x6f,
+	0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x06, 0x48, 0x65, 0x61, 0x6c,
+	0x74, 0x68, 0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x16, 0x2e, 0x68, 0x65, 0x61,
+	0x6c, 0x74, 0x68, 0x2e, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x04, 0x50, 0x69, 0x6e, 0x67, 0x12, 0x16, 0x2e, 0x67,
+	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45,
+	0x6d, 0x70, 0x74, 0x79, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x63,
+	0x0a, 0x0e, 0x47, 0x65, 0x74, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x12, 0x26, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f,
+	0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x74,
+	0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x12, 0x6f, 0x0a, 0x12, 0x50, 0x72, 0x6f, 0x70, 0x6f, 0x73, 0x65, 0x41, 0x74,
+	0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2a, 0x2e, 0x62, 0x65, 0x61, 0x63,
+	0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x72, 0x6f, 0x70,
+	0x6f, 0x73, 0x65, 0x41, 0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2b, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70,
+	0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x72, 0x6f, 0x70, 0x6f, 0x73, 0x65, 0x41,
+	0x74, 0x74, 0x65, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x87, 0x01, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x41, 0x67, 0x67, 0x72,
+	0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72,
+	0x6f, 0x6f, 0x66, 0x12, 0x32, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61,
+	0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x33, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e,
+	0x73, 0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x67, 0x67,
+	0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50,
+	0x72, 0x6f, 0x6f, 0x66, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0xa2,
+	0x01, 0x0a, 0x23, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x41,
+	0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f,
+	0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x12, 0x3b, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73,
+	0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x53,
+	0x69, 0x67, 0x6e, 0x65, 0x64, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65,
+	0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x3c, 0x2e, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x53, 0x69, 0x67, 0x6e,
+	0x65, 0x64, 0x41, 0x67, 0x67, 0x72, 0x65, 0x67, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x42, 0x43, 0x5a, 0x41, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
+	0x6d, 0x2f, 0x62, 0x65, 0x67, 0x6d, 0x61, 0x72, 0x6f, 0x6d, 0x61, 0x6e, 0x2f, 0x62, 0x65, 0x61,
+	0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x62, 0x65,
+	0x61, 0x63, 0x6f, 0x6e, 0x73, 0x70, 0x6f, 0x74, 0x3b, 0x62, 0x65, 0x61, 0x63, 0x6f, 0x6e, 0x73,
+	0x70, 0x6f, 0x74, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -412,36 +758,50 @@ func file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_raw
 	return file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDescData
 }
 
-var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_goTypes = []interface{}{
-	(*GetAttestationRequest)(nil),      // 0: beaconspotproto.GetAttestationRequest
-	(*GetAttestationResponse)(nil),     // 1: beaconspotproto.GetAttestationResponse
-	(*ProposeAttestationRequest)(nil),  // 2: beaconspotproto.ProposeAttestationRequest
-	(*ProposeAttestationResponse)(nil), // 3: beaconspotproto.ProposeAttestationResponse
-	(*status.Status)(nil),              // 4: Status
-	(*v1alpha1.AttestationData)(nil),   // 5: ethereum.eth.v1alpha1.AttestationData
-	(*empty.Empty)(nil),                // 6: google.protobuf.Empty
-	(*health.HealthResponse)(nil),      // 7: health.HealthResponse
+	(*GetAttestationRequest)(nil),                       // 0: beaconspotproto.GetAttestationRequest
+	(*GetAttestationResponse)(nil),                      // 1: beaconspotproto.GetAttestationResponse
+	(*ProposeAttestationRequest)(nil),                   // 2: beaconspotproto.ProposeAttestationRequest
+	(*ProposeAttestationResponse)(nil),                  // 3: beaconspotproto.ProposeAttestationResponse
+	(*GetAggregateSelectionProofRequest)(nil),           // 4: beaconspotproto.GetAggregateSelectionProofRequest
+	(*GetAggregateSelectionProofResponse)(nil),          // 5: beaconspotproto.GetAggregateSelectionProofResponse
+	(*SubmitSignedAggregateSelectionProofRequest)(nil),  // 6: beaconspotproto.SubmitSignedAggregateSelectionProofRequest
+	(*SubmitSignedAggregateSelectionProofResponse)(nil), // 7: beaconspotproto.SubmitSignedAggregateSelectionProofResponse
+	(*status.Status)(nil),                               // 8: Status
+	(*v1alpha1.AttestationData)(nil),                    // 9: ethereum.eth.v1alpha1.AttestationData
+	(*empty.Empty)(nil),                                 // 10: google.protobuf.Empty
+	(*v1alpha1.AggregateAttestationAndProof)(nil),       // 11: ethereum.eth.v1alpha1.AggregateAttestationAndProof
+	(*health.HealthResponse)(nil),                       // 12: health.HealthResponse
 }
 var file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_depIdxs = []int32{
-	4, // 0: beaconspotproto.GetAttestationResponse.error:type_name -> Status
-	5, // 1: beaconspotproto.GetAttestationResponse.attestation_data:type_name -> ethereum.eth.v1alpha1.AttestationData
-	5, // 2: beaconspotproto.ProposeAttestationRequest.attestation_data:type_name -> ethereum.eth.v1alpha1.AttestationData
-	4, // 3: beaconspotproto.ProposeAttestationResponse.error:type_name -> Status
-	6, // 4: beaconspotproto.ProposeAttestationResponse.empty:type_name -> google.protobuf.Empty
-	6, // 5: beaconspotproto.BeaconSpotService.Health:input_type -> google.protobuf.Empty
-	6, // 6: beaconspotproto.BeaconSpotService.Ping:input_type -> google.protobuf.Empty
-	0, // 7: beaconspotproto.BeaconSpotService.GetAttestation:input_type -> beaconspotproto.GetAttestationRequest
-	2, // 8: beaconspotproto.BeaconSpotService.ProposeAttestation:input_type -> beaconspotproto.ProposeAttestationRequest
-	7, // 9: beaconspotproto.BeaconSpotService.Health:output_type -> health.HealthResponse
-	6, // 10: beaconspotproto.BeaconSpotService.Ping:output_type -> google.protobuf.Empty
-	1, // 11: beaconspotproto.BeaconSpotService.GetAttestation:output_type -> beaconspotproto.GetAttestationResponse
-	3, // 12: beaconspotproto.BeaconSpotService.ProposeAttestation:output_type -> beaconspotproto.ProposeAttestationResponse
-	9, // [9:13] is the sub-list for method output_type
-	5, // [5:9] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	8,  // 0: beaconspotproto.GetAttestationResponse.error:type_name -> Status
+	9,  // 1: beaconspotproto.GetAttestationResponse.attestation_data:type_name -> ethereum.eth.v1alpha1.AttestationData
+	9,  // 2: beaconspotproto.ProposeAttestationRequest.attestation_data:type_name -> ethereum.eth.v1alpha1.AttestationData
+	8,  // 3: beaconspotproto.ProposeAttestationResponse.error:type_name -> Status
+	10, // 4: beaconspotproto.ProposeAttestationResponse.empty:type_name -> google.protobuf.Empty
+	8,  // 5: beaconspotproto.GetAggregateSelectionProofResponse.error:type_name -> Status
+	11, // 6: beaconspotproto.GetAggregateSelectionProofResponse.data:type_name -> ethereum.eth.v1alpha1.AggregateAttestationAndProof
+	11, // 7: beaconspotproto.SubmitSignedAggregateSelectionProofRequest.data:type_name -> ethereum.eth.v1alpha1.AggregateAttestationAndProof
+	8,  // 8: beaconspotproto.SubmitSignedAggregateSelectionProofResponse.error:type_name -> Status
+	10, // 9: beaconspotproto.SubmitSignedAggregateSelectionProofResponse.empty:type_name -> google.protobuf.Empty
+	10, // 10: beaconspotproto.BeaconSpotService.Health:input_type -> google.protobuf.Empty
+	10, // 11: beaconspotproto.BeaconSpotService.Ping:input_type -> google.protobuf.Empty
+	0,  // 12: beaconspotproto.BeaconSpotService.GetAttestation:input_type -> beaconspotproto.GetAttestationRequest
+	2,  // 13: beaconspotproto.BeaconSpotService.ProposeAttestation:input_type -> beaconspotproto.ProposeAttestationRequest
+	4,  // 14: beaconspotproto.BeaconSpotService.GetAggregateSelectionProof:input_type -> beaconspotproto.GetAggregateSelectionProofRequest
+	6,  // 15: beaconspotproto.BeaconSpotService.SubmitSignedAggregateSelectionProof:input_type -> beaconspotproto.SubmitSignedAggregateSelectionProofRequest
+	12, // 16: beaconspotproto.BeaconSpotService.Health:output_type -> health.HealthResponse
+	10, // 17: beaconspotproto.BeaconSpotService.Ping:output_type -> google.protobuf.Empty
+	1,  // 18: beaconspotproto.BeaconSpotService.GetAttestation:output_type -> beaconspotproto.GetAttestationResponse
+	3,  // 19: beaconspotproto.BeaconSpotService.ProposeAttestation:output_type -> beaconspotproto.ProposeAttestationResponse
+	5,  // 20: beaconspotproto.BeaconSpotService.GetAggregateSelectionProof:output_type -> beaconspotproto.GetAggregateSelectionProofResponse
+	7,  // 21: beaconspotproto.BeaconSpotService.SubmitSignedAggregateSelectionProof:output_type -> beaconspotproto.SubmitSignedAggregateSelectionProofResponse
+	16, // [16:22] is the sub-list for method output_type
+	10, // [10:16] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_init() }
@@ -498,6 +858,54 @@ func file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_ini
 				return nil
 			}
 		}
+		file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAggregateSelectionProofRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAggregateSelectionProofResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SubmitSignedAggregateSelectionProofRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SubmitSignedAggregateSelectionProofResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[1].OneofWrappers = []interface{}{
 		(*GetAttestationResponse_Error)(nil),
@@ -507,13 +915,21 @@ func file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_ini
 		(*ProposeAttestationResponse_Error)(nil),
 		(*ProposeAttestationResponse_Empty)(nil),
 	}
+	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[5].OneofWrappers = []interface{}{
+		(*GetAggregateSelectionProofResponse_Error)(nil),
+		(*GetAggregateSelectionProofResponse_Data)(nil),
+	}
+	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_msgTypes[7].OneofWrappers = []interface{}{
+		(*SubmitSignedAggregateSelectionProofResponse_Error)(nil),
+		(*SubmitSignedAggregateSelectionProofResponse_Empty)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -544,6 +960,9 @@ type BeaconSpotServiceClient interface {
 	// Attester
 	GetAttestation(ctx context.Context, in *GetAttestationRequest, opts ...grpc.CallOption) (*GetAttestationResponse, error)
 	ProposeAttestation(ctx context.Context, in *ProposeAttestationRequest, opts ...grpc.CallOption) (*ProposeAttestationResponse, error)
+	// Aggregate
+	GetAggregateSelectionProof(ctx context.Context, in *GetAggregateSelectionProofRequest, opts ...grpc.CallOption) (*GetAggregateSelectionProofResponse, error)
+	SubmitSignedAggregateSelectionProof(ctx context.Context, in *SubmitSignedAggregateSelectionProofRequest, opts ...grpc.CallOption) (*SubmitSignedAggregateSelectionProofResponse, error)
 }
 
 type beaconSpotServiceClient struct {
@@ -590,6 +1009,24 @@ func (c *beaconSpotServiceClient) ProposeAttestation(ctx context.Context, in *Pr
 	return out, nil
 }
 
+func (c *beaconSpotServiceClient) GetAggregateSelectionProof(ctx context.Context, in *GetAggregateSelectionProofRequest, opts ...grpc.CallOption) (*GetAggregateSelectionProofResponse, error) {
+	out := new(GetAggregateSelectionProofResponse)
+	err := c.cc.Invoke(ctx, "/beaconspotproto.BeaconSpotService/GetAggregateSelectionProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *beaconSpotServiceClient) SubmitSignedAggregateSelectionProof(ctx context.Context, in *SubmitSignedAggregateSelectionProofRequest, opts ...grpc.CallOption) (*SubmitSignedAggregateSelectionProofResponse, error) {
+	out := new(SubmitSignedAggregateSelectionProofResponse)
+	err := c.cc.Invoke(ctx, "/beaconspotproto.BeaconSpotService/SubmitSignedAggregateSelectionProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BeaconSpotServiceServer is the server API for BeaconSpotService service.
 type BeaconSpotServiceServer interface {
 	Health(context.Context, *empty.Empty) (*health.HealthResponse, error)
@@ -597,6 +1034,9 @@ type BeaconSpotServiceServer interface {
 	// Attester
 	GetAttestation(context.Context, *GetAttestationRequest) (*GetAttestationResponse, error)
 	ProposeAttestation(context.Context, *ProposeAttestationRequest) (*ProposeAttestationResponse, error)
+	// Aggregate
+	GetAggregateSelectionProof(context.Context, *GetAggregateSelectionProofRequest) (*GetAggregateSelectionProofResponse, error)
+	SubmitSignedAggregateSelectionProof(context.Context, *SubmitSignedAggregateSelectionProofRequest) (*SubmitSignedAggregateSelectionProofResponse, error)
 }
 
 // UnimplementedBeaconSpotServiceServer can be embedded to have forward compatible implementations.
@@ -614,6 +1054,12 @@ func (*UnimplementedBeaconSpotServiceServer) GetAttestation(context.Context, *Ge
 }
 func (*UnimplementedBeaconSpotServiceServer) ProposeAttestation(context.Context, *ProposeAttestationRequest) (*ProposeAttestationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ProposeAttestation not implemented")
+}
+func (*UnimplementedBeaconSpotServiceServer) GetAggregateSelectionProof(context.Context, *GetAggregateSelectionProofRequest) (*GetAggregateSelectionProofResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetAggregateSelectionProof not implemented")
+}
+func (*UnimplementedBeaconSpotServiceServer) SubmitSignedAggregateSelectionProof(context.Context, *SubmitSignedAggregateSelectionProofRequest) (*SubmitSignedAggregateSelectionProofResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method SubmitSignedAggregateSelectionProof not implemented")
 }
 
 func RegisterBeaconSpotServiceServer(s *grpc.Server, srv BeaconSpotServiceServer) {
@@ -692,6 +1138,42 @@ func _BeaconSpotService_ProposeAttestation_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BeaconSpotService_GetAggregateSelectionProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAggregateSelectionProofRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).GetAggregateSelectionProof(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/beaconspotproto.BeaconSpotService/GetAggregateSelectionProof",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).GetAggregateSelectionProof(ctx, req.(*GetAggregateSelectionProofRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BeaconSpotService_SubmitSignedAggregateSelectionProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitSignedAggregateSelectionProofRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).SubmitSignedAggregateSelectionProof(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/beaconspotproto.BeaconSpotService/SubmitSignedAggregateSelectionProof",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).SubmitSignedAggregateSelectionProof(ctx, req.(*SubmitSignedAggregateSelectionProofRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _BeaconSpotService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "beaconspotproto.BeaconSpotService",
 	HandlerType: (*BeaconSpotServiceServer)(nil),
@@ -711,6 +1193,14 @@ var _BeaconSpotService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ProposeAttestation",
 			Handler:    _BeaconSpotService_ProposeAttestation_Handler,
+		},
+		{
+			MethodName: "GetAggregateSelectionProof",
+			Handler:    _BeaconSpotService_GetAggregateSelectionProof_Handler,
+		},
+		{
+			MethodName: "SubmitSignedAggregateSelectionProof",
+			Handler:    _BeaconSpotService_SubmitSignedAggregateSelectionProof_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

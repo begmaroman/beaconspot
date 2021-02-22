@@ -29,8 +29,8 @@ type BeaconChain interface {
 	// ProposeBlock proposes block
 	ProposeBlock(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error
 
-	// SubmitAggregateSelectionProof returns aggregated attestation
-	SubmitAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error)
+	// GetAggregateSelectionProof returns aggregated attestation
+	GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error)
 
 	// SubmitSignedAggregateSelectionProof verifies given aggregate and proofs and publishes them on appropriate gossipsub topic
 	SubmitSignedAggregateSelectionProof(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error

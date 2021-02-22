@@ -146,8 +146,8 @@ func (c *combined) ProposeBlock(ctx context.Context, signature []byte, block *et
 	return errors.Errorf("failed to propose block to all nodes: %s", strings.Join(errMsgs, ", "))
 }
 
-// SubmitAggregateSelectionProof returns aggregated attestation
-func (c *combined) SubmitAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+// GetAggregateSelectionProof returns aggregated attestation
+func (c *combined) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	type result struct {
 		res *ethpb.AggregateAttestationAndProof
 		err error
@@ -161,7 +161,7 @@ func (c *combined) SubmitAggregateSelectionProof(ctx context.Context, slot, comm
 
 	for _, beaconChain := range c.beaconChains {
 		go func(beaconChain beaconchain.BeaconChain) {
-			res, err := beaconChain.SubmitAggregateSelectionProof(ctx, slot, committeeIndex, publicKey, sig)
+			res, err := beaconChain.GetAggregateSelectionProof(ctx, slot, committeeIndex, publicKey, sig)
 			feed.Send(&result{
 				res: res,
 				err: err,
