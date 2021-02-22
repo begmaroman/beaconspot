@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "github.com/begmaroman/beaconspot/proto/beaconspot;beaconspotproto";
 
-package grpcapiproto;
+package beaconspotproto;
 
 import "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1/attestation.proto";
 import "google/protobuf/empty.proto";
