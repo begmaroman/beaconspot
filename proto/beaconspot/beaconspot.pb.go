@@ -7,11 +7,15 @@
 package beaconspotproto
 
 import (
+	context "context"
 	health "github.com/begmaroman/beaconspot/proto/health"
 	status "github.com/begmaroman/beaconspot/proto/status"
 	proto "github.com/golang/protobuf/proto"
 	empty "github.com/golang/protobuf/ptypes/empty"
 	v1alpha1 "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status1 "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -519,4 +523,194 @@ func file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_ini
 	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_rawDesc = nil
 	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_goTypes = nil
 	file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// BeaconSpotServiceClient is the client API for BeaconSpotService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type BeaconSpotServiceClient interface {
+	Health(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*health.HealthResponse, error)
+	Ping(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*empty.Empty, error)
+	// Attester
+	GetAttestation(ctx context.Context, in *GetAttestationRequest, opts ...grpc.CallOption) (*GetAttestationResponse, error)
+	ProposeAttestation(ctx context.Context, in *ProposeAttestationRequest, opts ...grpc.CallOption) (*ProposeAttestationResponse, error)
+}
+
+type beaconSpotServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBeaconSpotServiceClient(cc grpc.ClientConnInterface) BeaconSpotServiceClient {
+	return &beaconSpotServiceClient{cc}
+}
+
+func (c *beaconSpotServiceClient) Health(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*health.HealthResponse, error) {
+	out := new(health.HealthResponse)
+	err := c.cc.Invoke(ctx, "/grpcapiproto.BeaconSpotService/Health", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *beaconSpotServiceClient) Ping(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/grpcapiproto.BeaconSpotService/Ping", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *beaconSpotServiceClient) GetAttestation(ctx context.Context, in *GetAttestationRequest, opts ...grpc.CallOption) (*GetAttestationResponse, error) {
+	out := new(GetAttestationResponse)
+	err := c.cc.Invoke(ctx, "/grpcapiproto.BeaconSpotService/GetAttestation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *beaconSpotServiceClient) ProposeAttestation(ctx context.Context, in *ProposeAttestationRequest, opts ...grpc.CallOption) (*ProposeAttestationResponse, error) {
+	out := new(ProposeAttestationResponse)
+	err := c.cc.Invoke(ctx, "/grpcapiproto.BeaconSpotService/ProposeAttestation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BeaconSpotServiceServer is the server API for BeaconSpotService service.
+type BeaconSpotServiceServer interface {
+	Health(context.Context, *empty.Empty) (*health.HealthResponse, error)
+	Ping(context.Context, *empty.Empty) (*empty.Empty, error)
+	// Attester
+	GetAttestation(context.Context, *GetAttestationRequest) (*GetAttestationResponse, error)
+	ProposeAttestation(context.Context, *ProposeAttestationRequest) (*ProposeAttestationResponse, error)
+}
+
+// UnimplementedBeaconSpotServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedBeaconSpotServiceServer struct {
+}
+
+func (*UnimplementedBeaconSpotServiceServer) Health(context.Context, *empty.Empty) (*health.HealthResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method Health not implemented")
+}
+func (*UnimplementedBeaconSpotServiceServer) Ping(context.Context, *empty.Empty) (*empty.Empty, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
+func (*UnimplementedBeaconSpotServiceServer) GetAttestation(context.Context, *GetAttestationRequest) (*GetAttestationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetAttestation not implemented")
+}
+func (*UnimplementedBeaconSpotServiceServer) ProposeAttestation(context.Context, *ProposeAttestationRequest) (*ProposeAttestationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ProposeAttestation not implemented")
+}
+
+func RegisterBeaconSpotServiceServer(s *grpc.Server, srv BeaconSpotServiceServer) {
+	s.RegisterService(&_BeaconSpotService_serviceDesc, srv)
+}
+
+func _BeaconSpotService_Health_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(empty.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).Health(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpcapiproto.BeaconSpotService/Health",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).Health(ctx, req.(*empty.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BeaconSpotService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(empty.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).Ping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpcapiproto.BeaconSpotService/Ping",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).Ping(ctx, req.(*empty.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BeaconSpotService_GetAttestation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAttestationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).GetAttestation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpcapiproto.BeaconSpotService/GetAttestation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).GetAttestation(ctx, req.(*GetAttestationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BeaconSpotService_ProposeAttestation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProposeAttestationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BeaconSpotServiceServer).ProposeAttestation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpcapiproto.BeaconSpotService/ProposeAttestation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BeaconSpotServiceServer).ProposeAttestation(ctx, req.(*ProposeAttestationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _BeaconSpotService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "grpcapiproto.BeaconSpotService",
+	HandlerType: (*BeaconSpotServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Health",
+			Handler:    _BeaconSpotService_Health_Handler,
+		},
+		{
+			MethodName: "Ping",
+			Handler:    _BeaconSpotService_Ping_Handler,
+		},
+		{
+			MethodName: "GetAttestation",
+			Handler:    _BeaconSpotService_GetAttestation_Handler,
+		},
+		{
+			MethodName: "ProposeAttestation",
+			Handler:    _BeaconSpotService_ProposeAttestation_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "github.com/begmaroman/beaconspot/proto/beaconspot/beaconspot.proto",
 }

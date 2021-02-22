@@ -2,6 +2,10 @@ module github.com/begmaroman/beaconspot
 
 go 1.15
 
+replace google.golang.org/grpc => google.golang.org/grpc v1.27.0
+
+replace google.golang.org/api => google.golang.org/api v0.15.0
+
 require (
 	github.com/bloxapp/eth2-key-manager v1.0.4
 	github.com/ethereum/go-ethereum v1.9.25
@@ -13,7 +17,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prysmaticlabs/eth2-types v0.0.0-20210210115503-cf4ec6600a2d
 	github.com/prysmaticlabs/ethereumapis v0.0.0-20210211220440-bfff608b8ba9
-	github.com/prysmaticlabs/prysm v1.2.2
+	github.com/prysmaticlabs/prysm v1.1.0
 	github.com/stretchr/testify v1.6.1
 	go.opencensus.io v0.22.5
 	go.uber.org/zap v1.16.0
