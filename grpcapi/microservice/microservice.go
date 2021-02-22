@@ -1,7 +1,6 @@
 package microservice
 
 import (
-	"fmt"
 	"net"
 
 	"github.com/bloxapp/eth2-key-manager/core"
@@ -41,7 +40,7 @@ func Init(clientOpts *ClientOptions) (*MicroService, error) {
 		clientOpts.Log.Info("Running in test mode!")
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", 5000))
+	lis, err := net.Listen("tcp", ":5000")
 	if err != nil {
 		return nil, err
 	}
