@@ -83,7 +83,7 @@ func (c *prysmGRPC) ProposeBlock(ctx context.Context, signature []byte, block *e
 
 // GetAggregateSelectionProof returns aggregated attestation
 func (c *prysmGRPC) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
-	res, err := c.validatorClient.GetAggregateSelectionProof(ctx, &ethpb.AggregateSelectionRequest{
+	res, err := c.validatorClient.SubmitAggregateSelectionProof(ctx, &ethpb.AggregateSelectionRequest{
 		Slot:           slot,
 		CommitteeIndex: committeeIndex,
 		PublicKey:      publicKey,
