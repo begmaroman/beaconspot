@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	types "github.com/prysmaticlabs/eth2-types"
-
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 )
@@ -28,7 +26,7 @@ func (m *voluntaryExitsMessageModel) toProto() (*ethpb.VoluntaryExit, error) {
 	}
 
 	return &ethpb.VoluntaryExit{
-		Epoch:          types.Epoch(epoch),
+		Epoch:          uint64(epoch),
 		ValidatorIndex: uint64(index),
 	}, nil
 }
@@ -264,7 +262,7 @@ func (m *blockHeaderModel) toProto() (*ethpb.BeaconBlockHeader, error) {
 	}
 
 	return &ethpb.BeaconBlockHeader{
-		Slot:          types.Slot(slot),
+		Slot:          uint64(slot),
 		ProposerIndex: uint64(proposerIndex),
 		ParentRoot:    parentRoot,
 		StateRoot:     stateRoot,
@@ -539,7 +537,7 @@ func (m *blockModel) toProto() (*ethpb.BeaconBlock, error) {
 	}
 
 	return &ethpb.BeaconBlock{
-		Slot:          types.Slot(slot),
+		Slot:          uint64(slot),
 		ProposerIndex: uint64(proposerIndex),
 		ParentRoot:    parentRoot,
 		StateRoot:     stateRoot,

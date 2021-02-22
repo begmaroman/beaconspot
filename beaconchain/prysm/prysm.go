@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 
-	types "github.com/prysmaticlabs/eth2-types"
-
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 	"go.uber.org/zap"
@@ -30,7 +28,7 @@ func New(logger *zap.Logger, validatorClient ethpb.BeaconNodeValidatorClient) be
 // GetAttestationData returns attestation data
 func (c *prysmGRPC) GetAttestationData(ctx context.Context, slot, committeeIndex uint64) (*ethpb.AttestationData, error) {
 	resp, err := c.validatorClient.GetAttestationData(ctx, &ethpb.AttestationDataRequest{
-		Slot:           types.Slot(slot),
+		Slot:           slot,
 		CommitteeIndex: committeeIndex,
 	})
 	if err != nil {
@@ -59,7 +57,7 @@ func (c *prysmGRPC) ProposeAttestation(ctx context.Context, data *ethpb.Attestat
 // GetBlock returns block by the given data
 func (c *prysmGRPC) GetBlock(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 	b, err := c.validatorClient.GetBlock(ctx, &ethpb.BlockRequest{
-		Slot:         types.Slot(slot),
+		Slot:         slot,
 		RandaoReveal: randaoReveal,
 		Graffiti:     graffiti,
 	})
@@ -86,7 +84,7 @@ func (c *prysmGRPC) ProposeBlock(ctx context.Context, signature []byte, block *e
 // SubmitAggregateSelectionProof returns aggregated attestation
 func (c *prysmGRPC) SubmitAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	res, err := c.validatorClient.SubmitAggregateSelectionProof(ctx, &ethpb.AggregateSelectionRequest{
-		Slot:           types.Slot(slot),
+		Slot:           slot,
 		CommitteeIndex: committeeIndex,
 		PublicKey:      publicKey,
 		SlotSignature:  sig,
@@ -116,13 +114,13 @@ func (c *prysmGRPC) SubmitSignedAggregateSelectionProof(ctx context.Context, sig
 // SubnetsSubscribe subscribes on the given subnets
 func (c *prysmGRPC) SubnetsSubscribe(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
 	subscribeReq := &ethpb.CommitteeSubnetsSubscribeRequest{
-		Slots:        make([]types.Slot, len(subscriptions)),
+		Slots:        make([]uint64, len(subscriptions)),
 		CommitteeIds: make([]uint64, len(subscriptions)),
 		IsAggregator: make([]bool, len(subscriptions)),
 	}
 
 	for i, subscription := range subscriptions {
-		subscribeReq.Slots[i] = types.Slot(subscription.Slot)
+		subscribeReq.Slots[i] = subscription.Slot
 		subscribeReq.CommitteeIds[i] = subscription.CommitteeIndex
 		subscribeReq.IsAggregator[i] = subscription.IsAggregator
 	}
@@ -138,7 +136,7 @@ func (c *prysmGRPC) SubnetsSubscribe(ctx context.Context, subscriptions []beacon
 // DomainData returns domain data by the given request
 func (c *prysmGRPC) DomainData(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
 	res, err := c.validatorClient.DomainData(ctx, &ethpb.DomainRequest{
-		Epoch:  types.Epoch(epoch),
+		Epoch:  epoch,
 		Domain: domain,
 	})
 	if err != nil {

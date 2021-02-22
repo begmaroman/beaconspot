@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	types "github.com/prysmaticlabs/eth2-types"
-
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 )
@@ -28,7 +26,7 @@ func (m *checkpointModel) toProto() (*ethpb.Checkpoint, error) {
 	}
 
 	return &ethpb.Checkpoint{
-		Epoch: types.Epoch(epoch),
+		Epoch: uint64(epoch),
 		Root:  root,
 	}, nil
 }
@@ -75,7 +73,7 @@ func (m *attestationDataModel) toProto() (*ethpb.AttestationData, error) {
 	}
 
 	return &ethpb.AttestationData{
-		Slot:            types.Slot(dataSlot),
+		Slot:            uint64(dataSlot),
 		CommitteeIndex:  uint64(dataIndex),
 		BeaconBlockRoot: dataBeaconBlockRoot,
 		Source:          source,

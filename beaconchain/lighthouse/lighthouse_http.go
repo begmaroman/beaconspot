@@ -11,8 +11,6 @@ import (
 	"strings"
 	"sync"
 
-	types "github.com/prysmaticlabs/eth2-types"
-
 	"github.com/bloxapp/eth2-key-manager/core"
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
@@ -327,7 +325,7 @@ func (n *lighthouseHTTP) DomainData(ctx context.Context, epoch uint64, domain []
 		return nil, errors.Wrap(err, "LightHouse: failed to decode genesis validators root")
 	}
 
-	dv, err := helpers.Domain(&pb.Fork{CurrentVersion: currentVersion}, types.Epoch(epoch), bytesutil.ToBytes4(domain), genesisValidatorRoot)
+	dv, err := helpers.Domain(&pb.Fork{CurrentVersion: currentVersion}, epoch, bytesutil.ToBytes4(domain), genesisValidatorRoot)
 	if err != nil {
 		n.logger.Error("LightHouse: failed to get domain data", zap.Error(err), zap.Any("data", data.Data))
 		return nil, errors.Wrap(err, "LightHouse: failed to get domain data")

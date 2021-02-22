@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	types "github.com/prysmaticlabs/eth2-types"
-
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 )
@@ -40,7 +38,7 @@ func (m *dutyDataModel) toProposerDuties() (*ethpb.DutiesResponse_Duty, error) {
 	return &ethpb.DutiesResponse_Duty{
 		PublicKey:      pubKey,
 		ValidatorIndex: uint64(validatorIndex),
-		ProposerSlots:  []types.Slot{types.Slot(slot)},
+		ProposerSlots:  []uint64{uint64(slot)},
 		Status:         ethpb.ValidatorStatus_ACTIVE, // TODO: Fill real status
 	}, nil
 }
@@ -76,7 +74,7 @@ func (m *dutyDataModel) toAttesterDuties() (*ethpb.DutiesResponse_Duty, error) {
 		ValidatorIndex: uint64(validatorIndex),
 		CommitteeIndex: uint64(committeeIndex),
 		Committee:      make([]uint64, committeeLen), // TODO: Implement real committee
-		AttesterSlot:   types.Slot(slot),
+		AttesterSlot:   uint64(slot),
 		Status:         ethpb.ValidatorStatus_ACTIVE, // TODO: Fill real status
 	}, nil
 }

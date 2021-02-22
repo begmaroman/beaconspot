@@ -39,7 +39,7 @@ func newLighthouseStreamDuties(ctx context.Context, logger *zap.Logger, network 
 	genesisTime := time.Unix(int64(network.MinGenesisTime()), 0)
 	dutiesCh := make(chan *ethpb.DutiesResponse, capacity)
 	errCh := make(chan error, capacity)
-	epochTicker := helpers.NewEpochTicker(genesisTime, network.SlotsPerEpoch()*uint64(network.SlotDurationSec().Seconds()))
+	epochTicker := helpers.GetEpochTicker(genesisTime, network.SlotsPerEpoch()*uint64(network.SlotDurationSec().Seconds()))
 
 	client := &lighthouseStreamDuties{
 		ctx:              ctx,
