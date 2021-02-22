@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
-	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc"
+
+	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 )
 
 func main() {
-	conn, err := grpc.Dial("127.0.0.1:5000", grpc.WithInsecure())
+	conn, err := grpc.Dial("5.9.6.37:5000", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}

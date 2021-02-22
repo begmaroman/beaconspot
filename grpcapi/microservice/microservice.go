@@ -62,7 +62,7 @@ func Init(clientOpts *ClientOptions) (*MicroService, error) {
 	}
 
 	// Populate Lighthouse clients
-	for _, addr := range opts.PrysmAddrs {
+	for _, addr := range opts.LighthouseAddrs {
 		// TODO: Pass network through evars
 		lightHouseClient := lighthouse.New(clientOpts.Log, core.PyrmontNetwork, addr)
 		clients = append(clients, lightHouseClient)
