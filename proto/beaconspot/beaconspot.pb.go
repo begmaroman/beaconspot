@@ -8,6 +8,9 @@ package beaconspotproto
 
 import (
 	context "context"
+	reflect "reflect"
+	sync "sync"
+
 	health "github.com/begmaroman/beaconspot/proto/health"
 	status "github.com/begmaroman/beaconspot/proto/status"
 	proto "github.com/golang/protobuf/proto"
@@ -18,8 +21,6 @@ import (
 	status1 "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -527,11 +528,11 @@ func file_github_com_begmaroman_beaconspot_proto_beaconspot_beaconspot_proto_ini
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConnInterface
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion6
+const _ = grpc.SupportPackageIsVersion5
 
 // BeaconSpotServiceClient is the client API for BeaconSpotService service.
 //
@@ -545,10 +546,10 @@ type BeaconSpotServiceClient interface {
 }
 
 type beaconSpotServiceClient struct {
-	cc grpc.ClientConnInterface
+	cc *grpc.ClientConn
 }
 
-func NewBeaconSpotServiceClient(cc grpc.ClientConnInterface) BeaconSpotServiceClient {
+func NewBeaconSpotServiceClient(cc *grpc.ClientConn) BeaconSpotServiceClient {
 	return &beaconSpotServiceClient{cc}
 }
 
