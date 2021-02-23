@@ -25,6 +25,9 @@ service BeaconSpotService {
     // Propose
     rpc GetBlock(GetBlockRequest) returns (GetBlockResponse) {}
     rpc ProposeBlock(ProposeBlockRequest) returns (ProposeBlockResponse) {}
+
+    // Common endpoints
+    rpc SubnetsSubscribe(SubnetsSubscribeRequest) returns (SubnetsSubscribeResponse) {}
 }
 
 // GetAttestation operation
@@ -107,4 +110,24 @@ message ProposeBlockResponse {
         Status error = 1;
         google.protobuf.Empty empty = 2;
     }
+}
+
+// SubnetsSubscribe operation
+message SubnetsSubscribeRequest {
+    repeated SubnetSubscription subscriptions = 1;
+}
+
+message SubnetsSubscribeResponse {
+    oneof result {
+        Status error = 1;
+        google.protobuf.Empty empty = 2;
+    }
+}
+
+message SubnetSubscription {
+    uint64 validator_index = 1;
+    uint64 committee_index = 2;
+    uint64 committees_at_slot = 3;
+    uint64 slot = 4;
+    bool is_aggregator = 5;
 }
