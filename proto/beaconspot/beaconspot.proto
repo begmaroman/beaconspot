@@ -4,7 +4,8 @@ option go_package = "github.com/begmaroman/beaconspot/proto/beaconspot;beaconspo
 
 package beaconspotproto;
 
-import "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1/attestation.proto";
+import "eth/v1alpha1/attestation.proto";
+import "eth/v1alpha1/beacon_block.proto";
 import "google/protobuf/empty.proto";
 import "github.com/begmaroman/beaconspot/proto/health/health.proto";
 import "github.com/begmaroman/beaconspot/proto/status/status.proto";
@@ -20,6 +21,10 @@ service BeaconSpotService {
     // Aggregate
     rpc GetAggregateSelectionProof(GetAggregateSelectionProofRequest) returns (GetAggregateSelectionProofResponse) {}
     rpc SubmitSignedAggregateSelectionProof(SubmitSignedAggregateSelectionProofRequest) returns (SubmitSignedAggregateSelectionProofResponse) {}
+
+    // Propose
+    rpc GetBlock(GetBlockRequest) returns (GetBlockResponse) {}
+    rpc ProposeBlock(ProposeBlockRequest) returns (ProposeBlockResponse) {}
 }
 
 // GetAttestation operation
@@ -71,6 +76,33 @@ message SubmitSignedAggregateSelectionProofRequest {
 }
 
 message SubmitSignedAggregateSelectionProofResponse {
+    oneof result {
+        Status error = 1;
+        google.protobuf.Empty empty = 2;
+    }
+}
+
+// GetBlock operation
+message GetBlockRequest {
+    uint64 slot = 1;
+    bytes randao_reveal = 2;
+    bytes graffiti = 3;
+}
+
+message GetBlockResponse {
+    oneof result {
+        Status error = 1;
+        ethereum.eth.v1alpha1.BeaconBlock beacon_block = 2;
+    }
+}
+
+// ProposeBlock operation
+message ProposeBlockRequest {
+    bytes signature = 1;
+    ethereum.eth.v1alpha1.BeaconBlock beacon_block = 2;
+}
+
+message ProposeBlockResponse {
     oneof result {
         Status error = 1;
         google.protobuf.Empty empty = 2;
