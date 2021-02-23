@@ -4,6 +4,7 @@ option go_package = "github.com/begmaroman/beaconspot/proto/beaconspot;beaconspo
 
 package beaconspotproto;
 
+import "eth/v1alpha1/validator.proto";
 import "eth/v1alpha1/attestation.proto";
 import "eth/v1alpha1/beacon_block.proto";
 import "google/protobuf/empty.proto";
@@ -28,6 +29,7 @@ service BeaconSpotService {
 
     // Common endpoints
     rpc SubnetsSubscribe(SubnetsSubscribeRequest) returns (SubnetsSubscribeResponse) {}
+    rpc StreamDuties(StreamDutiesRequest) returns (stream StreamDutiesResponse) {}
 }
 
 // GetAttestation operation
@@ -130,4 +132,16 @@ message SubnetSubscription {
     uint64 committees_at_slot = 3;
     uint64 slot = 4;
     bool is_aggregator = 5;
+}
+
+// StreamDuties operation
+message StreamDutiesRequest {
+    repeated bytes public_keys = 1;
+}
+
+message StreamDutiesResponse {
+    oneof result {
+        Status error = 1;
+        ethereum.eth.v1alpha1.DutiesResponse duties = 2;
+    }
 }

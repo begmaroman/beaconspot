@@ -9,6 +9,7 @@ import (
 	"github.com/begmaroman/beaconspot/beaconchain"
 	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 	"github.com/begmaroman/beaconspot/proto/health"
+	proto "github.com/begmaroman/beaconspot/proto/status"
 )
 
 // To make sure Handler implements grpcapiproto.BeaconSpotServiceHandler interface.
@@ -57,6 +58,45 @@ func (h *handler) SubnetsSubscribe(ctx context.Context, req *beaconspotproto.Sub
 			Empty: &empty.Empty{},
 		},
 	}, nil
+}
+
+func (h *handler) StreamDuties(req *beaconspotproto.StreamDutiesRequest, srv beaconspotproto.BeaconSpotService_StreamDutiesServer) error {
+	client, err := h.beaconChainClient.StreamDuties(srv.Context(), req.GetPublicKeys())
+	if err != nil {
+		return err
+	}
+
+	for {
+		select {
+		case <-srv.Context().Done():
+			client.CloseSend()
+			return nil
+		default:
+			resp, err := client.Recv()
+			if err != nil {
+				if err := srv.Send(&beaconspotproto.StreamDutiesResponse{
+					Result: &beaconspotproto.StreamDutiesResponse_Error{
+						Error: &proto.Status{
+							Message: err.Error(),
+							Code:    500,
+							Details: []byte("failed to receive duties"),
+						},
+					},
+				}); err != nil {
+					h.log.Error("failed to send error message", zap.Error(err))
+				}
+				break
+			}
+
+			if err := srv.Send(&beaconspotproto.StreamDutiesResponse{
+				Result: &beaconspotproto.StreamDutiesResponse_Duties{
+					Duties: resp,
+				},
+			}); err != nil {
+				h.log.Error("failed to send duties message", zap.Error(err))
+			}
+		}
+	}
 }
 
 func (h *handler) Health(context.Context, *empty.Empty) (*health.HealthResponse, error) {
