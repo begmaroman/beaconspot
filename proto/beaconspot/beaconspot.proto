@@ -11,24 +11,32 @@ import "google/protobuf/empty.proto";
 import "github.com/begmaroman/beaconspot/proto/health/health.proto";
 import "github.com/begmaroman/beaconspot/proto/status/status.proto";
 
+// BeaconSpotService represents service definitions of beacon spot
 service BeaconSpotService {
     rpc Health(google.protobuf.Empty) returns (health.HealthResponse) {}
     rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
-    // Attester
+    // GetAttestation returns attestation data by the given request parameters.
     rpc GetAttestation(GetAttestationRequest) returns (GetAttestationResponse) {}
+    // ProposeAttestation submits the given signed attestation to the beacon nodes.
+    // This endpoint submits attestation to all nodes and waits for response from all of them.
     rpc ProposeAttestation(ProposeAttestationRequest) returns (ProposeAttestationResponse) {}
 
-    // Aggregate
+    // GetAggregateSelectionProof returns aggregation data by the given params.
     rpc GetAggregateSelectionProof(GetAggregateSelectionProofRequest) returns (GetAggregateSelectionProofResponse) {}
+    // SubmitSignedAggregateSelectionProof submits signed aggregation data to the beacon nodes.
+    // This endpoint submits aggregation to all nodes and waits for response from all of them.
     rpc SubmitSignedAggregateSelectionProof(SubmitSignedAggregateSelectionProofRequest) returns (SubmitSignedAggregateSelectionProofResponse) {}
 
-    // Propose
+    // GetBlock returns a block by the given request.
     rpc GetBlock(GetBlockRequest) returns (GetBlockResponse) {}
+    // ProposeBlock proposes the given signed block to beacon nodes.
+    // This endpoint submits signed block to all nodes and waits for response from all of them.
     rpc ProposeBlock(ProposeBlockRequest) returns (ProposeBlockResponse) {}
 
-    // Common endpoints
+    // SubnetsSubscribe sends a request to nodes to subscribe on the given subnets.
     rpc SubnetsSubscribe(SubnetsSubscribeRequest) returns (SubnetsSubscribeResponse) {}
+    // StreamDuties opens duties streaming from the beacon nodes.
     rpc StreamDuties(StreamDutiesRequest) returns (stream StreamDutiesResponse) {}
 }
 
