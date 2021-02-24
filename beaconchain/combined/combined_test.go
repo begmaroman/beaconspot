@@ -577,3 +577,177 @@ func Test_combined_SubmitSignedAggregateSelectionProof(t *testing.T) {
 		})
 	}
 }
+
+func Test_combined_SubnetsSubscribe(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx           context.Context
+		subscriptions []beaconchain.SubnetSubscription
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return nil
+						},
+					},
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						SubnetsSubscribeFn: func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+							return errors.New("test error")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			if err := c.SubnetsSubscribe(tt.args.ctx, tt.args.subscriptions); (err != nil) != tt.wantErr {
+				t.Errorf("SubnetsSubscribe() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_combined_DomainData(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx    context.Context
+		epoch  uint64
+		domain []byte
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			name: "return faster response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							time.Sleep(time.Second / 2)
+							return []byte("1"), nil
+						},
+					},
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							time.Sleep(time.Second / 4)
+							return []byte("2"), nil
+						},
+					},
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							return []byte("3"), nil
+						},
+					},
+				},
+			},
+			want: []byte("3"),
+		},
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							return nil, errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							return []byte("2"), nil
+						},
+					},
+				},
+			},
+			want: []byte("2"),
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							return nil, errors.New("test error 1")
+						},
+					},
+					&mock.BeaconChain{
+						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+							return nil, errors.New("test error 2")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			got, err := c.DomainData(tt.args.ctx, tt.args.epoch, tt.args.domain)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DomainData() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DomainData() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
