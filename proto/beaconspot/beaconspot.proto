@@ -16,6 +16,9 @@ service BeaconSpotService {
     rpc Health(google.protobuf.Empty) returns (health.HealthResponse) {}
     rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
+    // DomainData returns domain data by the given request
+    rpc DomainData(DomainDataRequest) returns (DomainDataResponse) {}
+
     // GetAttestation returns attestation data by the given request parameters.
     rpc GetAttestation(GetAttestationRequest) returns (GetAttestationResponse) {}
     // ProposeAttestation submits the given signed attestation to the beacon nodes.
@@ -38,6 +41,19 @@ service BeaconSpotService {
     rpc SubnetsSubscribe(SubnetsSubscribeRequest) returns (SubnetsSubscribeResponse) {}
     // StreamDuties opens duties streaming from the beacon nodes.
     rpc StreamDuties(StreamDutiesRequest) returns (stream StreamDutiesResponse) {}
+}
+
+// DomainData operation
+message DomainDataRequest {
+    uint64 epoch = 1;
+    bytes domain = 2;
+}
+
+message DomainDataResponse {
+    oneof result {
+        Status error = 1;
+        bytes domain_data = 2;
+    }
 }
 
 // GetAttestation operation

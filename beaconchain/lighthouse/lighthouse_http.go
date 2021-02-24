@@ -29,6 +29,9 @@ type lighthouseHTTP struct {
 	httpClient *http.Client
 	addr       string
 	logger     *zap.Logger
+
+	genesisData     *genesisModel
+	genesisDataLock sync.Mutex
 }
 
 // New is the constructor of lighthouseHTTP
@@ -84,7 +87,7 @@ func (n *lighthouseHTTP) GetAttestationData(ctx context.Context, slot, index uin
 }
 
 // ProposeAttestation proposes the given attestation
-func (n *lighthouseHTTP) ProposeAttestation(ctx context.Context, data *ethpb.AttestationData, aggregationBits, signature []byte) error {
+func (n *lighthouseHTTP) ProposeAttestation(_ context.Context, data *ethpb.AttestationData, aggregationBits, signature []byte) error {
 	reqBody, err := json.Marshal([]attestationModel{toAttestationModel(&ethpb.Attestation{
 		AggregationBits: aggregationBits,
 		Data:            data,
@@ -157,7 +160,7 @@ func (n *lighthouseHTTP) GetBlock(ctx context.Context, slot uint64, randaoReveal
 }
 
 // ProposeBlock submits proposal for the given block
-func (n *lighthouseHTTP) ProposeBlock(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+func (n *lighthouseHTTP) ProposeBlock(_ context.Context, signature []byte, block *ethpb.BeaconBlock) error {
 	reqBody, err := json.Marshal(toBlockSubmitModel(signature, block))
 	if err != nil {
 		return errors.Wrap(err, "LightHouse: failed to marshal lighthouse JSON model")
@@ -240,7 +243,7 @@ func (n *lighthouseHTTP) GetAggregateSelectionProof(ctx context.Context, slot, c
 }
 
 // SubmitSignedAggregateSelectionProof verifies given aggregate and proofs and publishes them on appropriate gossipsub topic
-func (n *lighthouseHTTP) SubmitSignedAggregateSelectionProof(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+func (n *lighthouseHTTP) SubmitSignedAggregateSelectionProof(_ context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
 	reqBody, err := json.Marshal([]interface{}{toSignedAggregateModel(signature, message)})
 	if err != nil {
 		return errors.Wrap(err, "LightHouse: failed to marshal lighthouse JSON model")
@@ -271,7 +274,7 @@ func (n *lighthouseHTTP) SubmitSignedAggregateSelectionProof(ctx context.Context
 }
 
 // SubnetsSubscribe subscribes on the given subnets
-func (n *lighthouseHTTP) SubnetsSubscribe(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
+func (n *lighthouseHTTP) SubnetsSubscribe(_ context.Context, subscriptions []beaconchain.SubnetSubscription) error {
 	models := make([]subnetSubscriptionModel, len(subscriptions))
 	for i, subscription := range subscriptions {
 		models[i] = toSubnetSubscriptionModel(subscription)
@@ -405,8 +408,15 @@ func (n *lighthouseHTTP) getValidatorID(ctx context.Context, pubKey []byte) (str
 	return data.Data[0].Index, nil
 }
 
-// TODO: Cache this data
+// getGenesisData loads genesis data from prysm node
 func (n *lighthouseHTTP) getGenesisData(ctx context.Context) (*genesisModel, error) {
+	n.genesisDataLock.Lock()
+	defer n.genesisDataLock.Unlock()
+
+	if n.genesisData != nil {
+		return n.genesisData, nil
+	}
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, n.addr+"/eth/v1/beacon/genesis", nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "LightHouse: failed to create request with context")
@@ -433,13 +443,12 @@ func (n *lighthouseHTTP) getGenesisData(ctx context.Context) (*genesisModel, err
 
 	defer resp.Body.Close()
 
-	var data genesisModel
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(n.genesisData); err != nil {
 		n.logger.Error("LightHouse: failed to decode response body", zap.Error(err))
 		return nil, errors.Wrap(err, "LightHouse: failed to decode response body")
 	}
 
-	return &data, nil
+	return n.genesisData, nil
 }
 
 func getResponseBodyRaw(resp *http.Response) string {

@@ -37,6 +37,19 @@ func New(opts Options) beaconspotproto.BeaconSpotServiceServer {
 	}
 }
 
+func (h *handler) DomainData(ctx context.Context, req *beaconspotproto.DomainDataRequest) (*beaconspotproto.DomainDataResponse, error) {
+	domainData, err := h.beaconChainClient.DomainData(ctx, req.GetEpoch(), req.GetDomain())
+	if err != nil {
+		return nil, err
+	}
+
+	return &beaconspotproto.DomainDataResponse{
+		Result: &beaconspotproto.DomainDataResponse_DomainData{
+			DomainData: domainData,
+		},
+	}, nil
+}
+
 func (h *handler) SubnetsSubscribe(ctx context.Context, req *beaconspotproto.SubnetsSubscribeRequest) (*beaconspotproto.SubnetsSubscribeResponse, error) {
 	subscription := make([]beaconchain.SubnetSubscription, len(req.GetSubscriptions()))
 	for i, sub := range req.GetSubscriptions() {
