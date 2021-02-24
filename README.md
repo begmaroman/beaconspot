@@ -37,7 +37,30 @@ docker run \
 -p 5000:5000 \
 -e BC_PRYSM_ADDRS=http://lighthouse-address-1:5052,http://lighthouse-address-2:5052 \
 -e BC_PRYSM_ADDRS=prysm-address-1:4000 \
-begmaroman/beaconspot:latest
+begmaroman/bea
+conspot:latest
+```
+
+Example of docker-compose definition:
+
+```yaml
+version: '3.5'
+
+services:
+
+  beaconspot:
+    image: begmaroman/beaconspot:latest
+    ports:
+      - "5000:5000"
+    environment:
+      BC_LIGHTHOUSE_ADDRS: "http://lighthouse-address-1:5052,http://lighthouse-address-2:5052"
+      BC_PRYSM_ADDRS: "prysm-address-1:4000"
+    restart: always
+```
+
+
+```bash
+docker-compose up beaconspot
 ```
 
 #### Source
