@@ -200,3 +200,380 @@ func Test_combined_ProposeAttestation(t *testing.T) {
 		})
 	}
 }
+
+func Test_combined_GetBlock(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx          context.Context
+		slot         uint64
+		randaoReveal []byte
+		graffiti     []byte
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *ethpb.BeaconBlock
+		wantErr bool
+	}{
+		{
+			name: "return faster response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							time.Sleep(time.Second / 2)
+							return &ethpb.BeaconBlock{
+								Slot: 1,
+							}, nil
+						},
+					},
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							time.Sleep(time.Second / 4)
+							return &ethpb.BeaconBlock{
+								Slot: 2,
+							}, nil
+						},
+					},
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							return &ethpb.BeaconBlock{
+								Slot: 3,
+							}, nil
+						},
+					},
+				},
+			},
+			want: &ethpb.BeaconBlock{
+				Slot: 3,
+			},
+		},
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							return nil, errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							return &ethpb.BeaconBlock{
+								Slot: 2,
+							}, nil
+						},
+					},
+				},
+			},
+			want: &ethpb.BeaconBlock{
+				Slot: 2,
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							return nil, errors.New("test error 1")
+						},
+					},
+					&mock.BeaconChain{
+						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+							return nil, errors.New("test error 2")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			got, err := c.GetBlock(tt.args.ctx, tt.args.slot, tt.args.randaoReveal, tt.args.graffiti)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetBlock() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetBlock() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_combined_ProposeBlock(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx       context.Context
+		signature []byte
+		block     *ethpb.BeaconBlock
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return nil
+						},
+					},
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						ProposeBlockFn: func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error {
+							return errors.New("test error")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			if err := c.ProposeBlock(tt.args.ctx, tt.args.signature, tt.args.block); (err != nil) != tt.wantErr {
+				t.Errorf("ProposeBlock() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_combined_GetAggregateSelectionProof(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx            context.Context
+		slot           uint64
+		committeeIndex uint64
+		publicKey      []byte
+		sig            []byte
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *ethpb.AggregateAttestationAndProof
+		wantErr bool
+	}{
+		{
+			name: "return faster response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							time.Sleep(time.Second / 2)
+							return &ethpb.AggregateAttestationAndProof{
+								AggregatorIndex: 1,
+							}, nil
+						},
+					},
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							time.Sleep(time.Second / 4)
+							return &ethpb.AggregateAttestationAndProof{
+								AggregatorIndex: 2,
+							}, nil
+						},
+					},
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							return &ethpb.AggregateAttestationAndProof{
+								AggregatorIndex: 3,
+							}, nil
+						},
+					},
+				},
+			},
+			want: &ethpb.AggregateAttestationAndProof{
+				AggregatorIndex: 3,
+			},
+		},
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							return nil, errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							return &ethpb.AggregateAttestationAndProof{
+								AggregatorIndex: 2,
+							}, nil
+						},
+					},
+				},
+			},
+			want: &ethpb.AggregateAttestationAndProof{
+				AggregatorIndex: 2,
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							return nil, errors.New("test error 1")
+						},
+					},
+					&mock.BeaconChain{
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+							return nil, errors.New("test error 2")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			got, err := c.GetAggregateSelectionProof(tt.args.ctx, tt.args.slot, tt.args.committeeIndex, tt.args.publicKey, tt.args.sig)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetAggregateSelectionProof() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetAggregateSelectionProof() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_combined_SubmitSignedAggregateSelectionProof(t *testing.T) {
+	type fields struct {
+		beaconChains []beaconchain.BeaconChain
+	}
+	type args struct {
+		ctx       context.Context
+		signature []byte
+		message   *ethpb.AggregateAttestationAndProof
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "return successful response",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return nil
+						},
+					},
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return nil
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "return error from all nodes",
+			fields: fields{
+				beaconChains: []beaconchain.BeaconChain{
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return errors.New("test error")
+						},
+					},
+					&mock.BeaconChain{
+						SubmitSignedAggregateSelectionProofFn: func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error {
+							return errors.New("test error")
+						},
+					},
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &combined{
+				beaconChains: tt.fields.beaconChains,
+			}
+			if err := c.SubmitSignedAggregateSelectionProof(tt.args.ctx, tt.args.signature, tt.args.message); (err != nil) != tt.wantErr {
+				t.Errorf("SubmitSignedAggregateSelectionProof() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
