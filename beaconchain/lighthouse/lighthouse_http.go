@@ -30,7 +30,7 @@ type lighthouseHTTP struct {
 	addr       string
 	logger     *zap.Logger
 
-	genesisData     *genesisModel
+	genesisData     genesisModel
 	genesisDataLock sync.Mutex
 }
 
@@ -409,43 +409,43 @@ func (n *lighthouseHTTP) getValidatorID(ctx context.Context, pubKey []byte) (str
 }
 
 // getGenesisData loads genesis data from prysm node
-func (n *lighthouseHTTP) getGenesisData(ctx context.Context) (*genesisModel, error) {
+func (n *lighthouseHTTP) getGenesisData(ctx context.Context) (genesisModel, error) {
 	n.genesisDataLock.Lock()
 	defer n.genesisDataLock.Unlock()
 
-	if n.genesisData != nil {
+	if n.genesisData.Data.GenesisTime != "" {
 		return n.genesisData, nil
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, n.addr+"/eth/v1/beacon/genesis", nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "LightHouse: failed to create request with context")
+		return n.genesisData, errors.Wrap(err, "LightHouse: failed to create request with context")
 	}
 
 	resp, err := n.httpClient.Do(req)
 	if err != nil {
 		if err == context.DeadlineExceeded || err == context.Canceled {
-			return nil, nil
+			return n.genesisData, nil
 		}
 
 		n.logger.Error("LightHouse: failed to send request to get genesis", zap.Error(err))
-		return nil, errors.Wrap(err, "LightHouse: failed to send request to get genesis")
+		return n.genesisData, errors.Wrap(err, "LightHouse: failed to send request to get genesis")
 	}
 
 	if resp.StatusCode > 299 {
 		n.logger.Error("LightHouse: unexpected response code", zap.Int("status_code", resp.StatusCode), zap.String("body", getResponseBodyRaw(resp)))
-		return nil, errors.Errorf("LightHouse: unexpected response code %d", resp.StatusCode)
+		return n.genesisData, errors.Errorf("LightHouse: unexpected response code %d", resp.StatusCode)
 	}
 
 	if resp.Body == nil {
-		return nil, errors.New("LightHouse: empty response body")
+		return n.genesisData, errors.New("LightHouse: empty response body")
 	}
 
 	defer resp.Body.Close()
 
-	if err := json.NewDecoder(resp.Body).Decode(n.genesisData); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&n.genesisData); err != nil {
 		n.logger.Error("LightHouse: failed to decode response body", zap.Error(err))
-		return nil, errors.Wrap(err, "LightHouse: failed to decode response body")
+		return n.genesisData, errors.Wrap(err, "LightHouse: failed to decode response body")
 	}
 
 	return n.genesisData, nil
