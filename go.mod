@@ -16,6 +16,7 @@ require (
 	github.com/bloxapp/eth2-key-manager v1.0.4
 	github.com/ethereum/go-ethereum v1.9.24
 	github.com/go-log/log v0.2.0
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
