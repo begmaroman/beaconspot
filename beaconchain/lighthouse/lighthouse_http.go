@@ -362,6 +362,23 @@ func (n *lighthouseHTTP) StreamDuties(ctx context.Context, pubKeys [][]byte) (et
 	return cl, nil
 }
 
+// GetGenesis returns genesis data
+func (n *lighthouseHTTP) GetGenesis(ctx context.Context) (*ethpb.Genesis, error) {
+	genesis, err := n.getGenesisData(ctx)
+	if err != nil {
+		n.logger.Error("LightHouse: failed to get genesis data", zap.Error(err))
+		return nil, errors.Wrap(err, "LightHouse: failed to get genesis data")
+	}
+
+	model, err := genesis.toGenesis()
+	if err != nil {
+		n.logger.Error("LightHouse: failed to build proto model of genesis data", zap.Error(err))
+		return nil, errors.Wrap(err, "LightHouse: failed to build proto model of genesis data")
+	}
+
+	return model, nil
+}
+
 func (n *lighthouseHTTP) getValidatorID(ctx context.Context, pubKey []byte) (string, error) {
 	url := n.addr + "/eth/v1/beacon/states/head/validators?id=0x" + hex.EncodeToString(pubKey)
 

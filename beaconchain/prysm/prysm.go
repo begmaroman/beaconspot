@@ -3,6 +3,8 @@ package prysm
 import (
 	"context"
 
+	"github.com/gogo/protobuf/types"
+
 	"github.com/pkg/errors"
 	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 	"go.uber.org/zap"
@@ -13,13 +15,15 @@ import (
 // prysmGRPC implements beaconchain.BeaconChain interface using Prysm beacon node via gRPC
 type prysmGRPC struct {
 	validatorClient ethpb.BeaconNodeValidatorClient
+	nodeClient      ethpb.NodeClient
 	logger          *zap.Logger
 }
 
 // New is the constructor of prysmGRPC
-func New(logger *zap.Logger, validatorClient ethpb.BeaconNodeValidatorClient) beaconchain.BeaconChain {
+func New(logger *zap.Logger, validatorClient ethpb.BeaconNodeValidatorClient, nodeClient ethpb.NodeClient) beaconchain.BeaconChain {
 	return &prysmGRPC{
 		validatorClient: validatorClient,
+		nodeClient:      nodeClient,
 		logger:          logger,
 	}
 }
@@ -66,6 +70,16 @@ func (c *prysmGRPC) StreamDuties(ctx context.Context, pubKeys [][]byte) (ethpb.B
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "Prysm: failed to get stream duties client")
+	}
+
+	return res, nil
+}
+
+// GetGenesis returns genesis data
+func (c *prysmGRPC) GetGenesis(ctx context.Context) (*ethpb.Genesis, error) {
+	res, err := c.nodeClient.GetGenesis(ctx, &types.Empty{})
+	if err != nil {
+		return nil, errors.Wrap(err, "Prysm: failed to get genesis")
 	}
 
 	return res, nil

@@ -43,4 +43,7 @@ type BeaconChain interface {
 
 	// StreamDuties returns client to stream duties
 	StreamDuties(ctx context.Context, pubKeys [][]byte) (ethpb.BeaconNodeValidator_StreamDutiesClient, error)
+
+	// GetGenesis returns genesis data
+	GetGenesis(ctx context.Context) (*ethpb.Genesis, error)
 }

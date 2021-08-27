@@ -290,3 +290,39 @@ func (c *combined) StreamDuties(ctx context.Context, pubKeys [][]byte) (ethpb.Be
 
 	return newStreamDuties(clients...), nil
 }
+
+// GetGenesis returns genesis data
+func (c *combined) GetGenesis(ctx context.Context) (*ethpb.Genesis, error) {
+	type result struct {
+		res *ethpb.Genesis
+		err error
+	}
+
+	feed := &event.Feed{}
+
+	dataChan := make(chan *result)
+	dataSub := feed.Subscribe(dataChan)
+	defer dataSub.Unsubscribe()
+
+	for _, beaconChain := range c.beaconChains {
+		go func(beaconChain beaconchain.BeaconChain) {
+			res, err := beaconChain.GetGenesis(ctx)
+			feed.Send(&result{
+				res: res,
+				err: err,
+			})
+		}(beaconChain)
+	}
+
+	var errs []string
+	for i := 0; i < len(c.beaconChains); i++ {
+		res := <-dataChan
+		if res.err != nil {
+			errs = append(errs, res.err.Error())
+		} else {
+			return res.res, nil
+		}
+	}
+
+	return nil, errors.Errorf("failed to get genesis data from all nodes: %s", strings.Join(errs, ", "))
+}

@@ -19,6 +19,7 @@ type BeaconChain struct {
 	SubnetsSubscribeFn                    func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error
 	DomainDataFn                          func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error)
 	StreamDutiesFn                        func(ctx context.Context, pubKeys [][]byte) (ethpb.BeaconNodeValidator_StreamDutiesClient, error)
+	GetGenesisFn                          func(ctx context.Context) (*ethpb.Genesis, error)
 }
 
 // GetAttestationData returns attestation data
@@ -64,4 +65,9 @@ func (m *BeaconChain) DomainData(ctx context.Context, epoch uint64, domain []byt
 // StreamDuties returns client to stream duties
 func (m *BeaconChain) StreamDuties(ctx context.Context, pubKeys [][]byte) (ethpb.BeaconNodeValidator_StreamDutiesClient, error) {
 	return m.StreamDutiesFn(ctx, pubKeys)
+}
+
+// GetGenesis returns genesis data
+func (m *BeaconChain) GetGenesis(ctx context.Context) (*ethpb.Genesis, error) {
+	return m.GetGenesisFn(ctx)
 }
