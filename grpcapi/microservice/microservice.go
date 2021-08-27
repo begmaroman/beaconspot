@@ -57,7 +57,8 @@ func Init(clientOpts *ClientOptions) (*MicroService, error) {
 		}
 
 		beaconNodeClient := ethpb.NewBeaconNodeValidatorClient(conn)
-		prysmClient := prysm.New(clientOpts.Log, beaconNodeClient)
+		nodeClient := ethpb.NewNodeClient(conn)
+		prysmClient := prysm.New(clientOpts.Log, beaconNodeClient, nodeClient)
 		clients = append(clients, prysmClient)
 	}
 
