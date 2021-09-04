@@ -3,27 +3,28 @@ package mock
 import (
 	"context"
 
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 
 	"github.com/begmaroman/beaconspot/beaconchain"
 )
 
 // BeaconChain represents BeaconChain of BeaconChain
 type BeaconChain struct {
-	GetAttestationDataFn                  func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error)
+	GetAttestationDataFn                  func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error)
 	ProposeAttestationFn                  func(ctx context.Context, data *ethpb.AttestationData, aggregationBits, signature []byte) error
-	GetBlockFn                            func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error)
+	GetBlockFn                            func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error)
 	ProposeBlockFn                        func(ctx context.Context, signature []byte, block *ethpb.BeaconBlock) error
-	GetAggregateSelectionProofFn          func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error)
+	GetAggregateSelectionProofFn          func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error)
 	SubmitSignedAggregateSelectionProofFn func(ctx context.Context, signature []byte, message *ethpb.AggregateAttestationAndProof) error
 	SubnetsSubscribeFn                    func(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error
-	DomainDataFn                          func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error)
+	DomainDataFn                          func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error)
 	StreamDutiesFn                        func(ctx context.Context, pubKeys [][]byte) (ethpb.BeaconNodeValidator_StreamDutiesClient, error)
 	GetGenesisFn                          func(ctx context.Context) (*ethpb.Genesis, error)
 }
 
 // GetAttestationData returns attestation data
-func (m *BeaconChain) GetAttestationData(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+func (m *BeaconChain) GetAttestationData(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 	return m.GetAttestationDataFn(ctx, slot, index)
 }
 
@@ -33,7 +34,7 @@ func (m *BeaconChain) ProposeAttestation(ctx context.Context, data *ethpb.Attest
 }
 
 // GetBlock returns block by the given data
-func (m *BeaconChain) GetBlock(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+func (m *BeaconChain) GetBlock(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 	return m.GetBlockFn(ctx, slot, randaoReveal, graffiti)
 }
 
@@ -43,7 +44,7 @@ func (m *BeaconChain) ProposeBlock(ctx context.Context, signature []byte, block 
 }
 
 // GetAggregateSelectionProof returns aggregated attestation
-func (m *BeaconChain) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+func (m *BeaconChain) GetAggregateSelectionProof(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	return m.GetAggregateSelectionProofFn(ctx, slot, committeeIndex, publicKey, sig)
 }
 
@@ -58,7 +59,7 @@ func (m *BeaconChain) SubnetsSubscribe(ctx context.Context, subscriptions []beac
 }
 
 // DomainData returns domain data by the given request
-func (m *BeaconChain) DomainData(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+func (m *BeaconChain) DomainData(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 	return m.DomainDataFn(ctx, epoch, domain)
 }
 

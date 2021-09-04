@@ -6,7 +6,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 )
 
 type dutyDataModel struct {
@@ -37,8 +38,8 @@ func (m *dutyDataModel) toProposerDuties() (*ethpb.DutiesResponse_Duty, error) {
 
 	return &ethpb.DutiesResponse_Duty{
 		PublicKey:      pubKey,
-		ValidatorIndex: uint64(validatorIndex),
-		ProposerSlots:  []uint64{uint64(slot)},
+		ValidatorIndex: types.ValidatorIndex(validatorIndex),
+		ProposerSlots:  []types.Slot{types.Slot(slot)},
 		Status:         ethpb.ValidatorStatus_ACTIVE, // TODO: Fill real status
 	}, nil
 }
@@ -71,10 +72,10 @@ func (m *dutyDataModel) toAttesterDuties() (*ethpb.DutiesResponse_Duty, error) {
 
 	return &ethpb.DutiesResponse_Duty{
 		PublicKey:      pubKey,
-		ValidatorIndex: uint64(validatorIndex),
-		CommitteeIndex: uint64(committeeIndex),
-		Committee:      make([]uint64, committeeLen), // TODO: Implement real committee
-		AttesterSlot:   uint64(slot),
+		ValidatorIndex: types.ValidatorIndex(validatorIndex),
+		CommitteeIndex: types.CommitteeIndex(committeeIndex),
+		Committee:      make([]types.ValidatorIndex, committeeLen), // TODO: Implement real committee
+		AttesterSlot:   types.Slot(slot),
 		Status:         ethpb.ValidatorStatus_ACTIVE, // TODO: Fill real status
 	}, nil
 }

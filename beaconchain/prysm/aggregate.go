@@ -4,11 +4,12 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 )
 
 // GetAggregateSelectionProof returns aggregated attestation
-func (c *prysmGRPC) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+func (c *prysmGRPC) GetAggregateSelectionProof(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	res, err := c.validatorClient.SubmitAggregateSelectionProof(ctx, &ethpb.AggregateSelectionRequest{
 		Slot:           slot,
 		CommitteeIndex: committeeIndex,

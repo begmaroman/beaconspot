@@ -3,10 +3,10 @@ package prysm
 import (
 	"context"
 
-	"github.com/gogo/protobuf/types"
-
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 	"go.uber.org/zap"
 
 	"github.com/begmaroman/beaconspot/beaconchain"
@@ -31,8 +31,8 @@ func New(logger *zap.Logger, validatorClient ethpb.BeaconNodeValidatorClient, no
 // SubnetsSubscribe subscribes on the given subnets
 func (c *prysmGRPC) SubnetsSubscribe(ctx context.Context, subscriptions []beaconchain.SubnetSubscription) error {
 	subscribeReq := &ethpb.CommitteeSubnetsSubscribeRequest{
-		Slots:        make([]uint64, len(subscriptions)),
-		CommitteeIds: make([]uint64, len(subscriptions)),
+		Slots:        make([]types.Slot, len(subscriptions)),
+		CommitteeIds: make([]types.CommitteeIndex, len(subscriptions)),
 		IsAggregator: make([]bool, len(subscriptions)),
 	}
 
@@ -51,7 +51,7 @@ func (c *prysmGRPC) SubnetsSubscribe(ctx context.Context, subscriptions []beacon
 }
 
 // DomainData returns domain data by the given request
-func (c *prysmGRPC) DomainData(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+func (c *prysmGRPC) DomainData(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 	res, err := c.validatorClient.DomainData(ctx, &ethpb.DomainRequest{
 		Epoch:  epoch,
 		Domain: domain,
@@ -77,7 +77,7 @@ func (c *prysmGRPC) StreamDuties(ctx context.Context, pubKeys [][]byte) (ethpb.B
 
 // GetGenesis returns genesis data
 func (c *prysmGRPC) GetGenesis(ctx context.Context) (*ethpb.Genesis, error) {
-	res, err := c.nodeClient.GetGenesis(ctx, &types.Empty{})
+	res, err := c.nodeClient.GetGenesis(ctx, &empty.Empty{})
 	if err != nil {
 		return nil, errors.Wrap(err, "Prysm: failed to get genesis")
 	}

@@ -4,11 +4,12 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 )
 
 // GetAttestationData returns attestation data
-func (c *prysmGRPC) GetAttestationData(ctx context.Context, slot, committeeIndex uint64) (*ethpb.AttestationData, error) {
+func (c *prysmGRPC) GetAttestationData(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex) (*ethpb.AttestationData, error) {
 	resp, err := c.validatorClient.GetAttestationData(ctx, &ethpb.AttestationDataRequest{
 		Slot:           slot,
 		CommitteeIndex: committeeIndex,

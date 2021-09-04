@@ -1,8 +1,9 @@
 package lighthouse
 
 import (
-	"github.com/begmaroman/beaconspot/beaconchain"
 	"strconv"
+
+	"github.com/begmaroman/beaconspot/beaconchain"
 )
 
 type subnetSubscriptionModel struct {

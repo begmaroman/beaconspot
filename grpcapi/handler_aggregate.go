@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	types "github.com/prysmaticlabs/eth2-types"
 
 	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 )
 
 func (h *handler) GetAggregateSelectionProof(ctx context.Context, req *beaconspotproto.GetAggregateSelectionProofRequest) (*beaconspotproto.GetAggregateSelectionProofResponse, error) {
-	data, err := h.beaconChainClient.GetAggregateSelectionProof(ctx, req.GetSlot(), req.GetCommitteeIndex(), req.GetPublicKey(), req.GetSignature())
+	data, err := h.beaconChainClient.GetAggregateSelectionProof(ctx, types.Slot(req.GetSlot()), types.CommitteeIndex(req.GetCommitteeIndex()), req.GetPublicKey(), req.GetSignature())
 	if err != nil {
 		return nil, err
 	}

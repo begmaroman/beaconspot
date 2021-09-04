@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/bloxapp/eth2-key-manager/core"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
 	"github.com/prysmaticlabs/prysm/endtoend/helpers"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 
@@ -39,7 +39,7 @@ func newLighthouseStreamDuties(ctx context.Context, logger *zap.Logger, network 
 	genesisTime := time.Unix(int64(network.MinGenesisTime()), 0)
 	dutiesCh := make(chan *ethpb.DutiesResponse, capacity)
 	errCh := make(chan error, capacity)
-	epochTicker := helpers.GetEpochTicker(genesisTime, network.SlotsPerEpoch()*uint64(network.SlotDurationSec().Seconds()))
+	epochTicker := helpers.NewEpochTicker(genesisTime, network.SlotsPerEpoch()*uint64(network.SlotDurationSec().Seconds()))
 
 	client := &lighthouseStreamDuties{
 		ctx:              ctx,

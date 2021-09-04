@@ -5,7 +5,7 @@ import (
 
 	"github.com/bloxapp/eth2-key-manager/core"
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 	"google.golang.org/grpc"
 
 	"github.com/begmaroman/beaconspot/beaconchain"

@@ -7,7 +7,8 @@ import (
 	"testing"
 	"time"
 
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 
 	"github.com/begmaroman/beaconspot/beaconchain"
 	"github.com/begmaroman/beaconspot/beaconchain/mock"
@@ -19,8 +20,8 @@ func Test_combined_GetAttestationData(t *testing.T) {
 	}
 	type args struct {
 		ctx   context.Context
-		slot  uint64
-		index uint64
+		slot  types.Slot
+		index types.CommitteeIndex
 	}
 	tests := []struct {
 		name    string
@@ -34,7 +35,7 @@ func Test_combined_GetAttestationData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							time.Sleep(time.Second / 2)
 							return &ethpb.AttestationData{
 								Slot: 1,
@@ -42,7 +43,7 @@ func Test_combined_GetAttestationData(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							time.Sleep(time.Second / 4)
 							return &ethpb.AttestationData{
 								Slot: 2,
@@ -50,7 +51,7 @@ func Test_combined_GetAttestationData(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							return &ethpb.AttestationData{
 								Slot: 3,
 							}, nil
@@ -67,12 +68,12 @@ func Test_combined_GetAttestationData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							return nil, errors.New("test error")
 						},
 					},
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							return &ethpb.AttestationData{
 								Slot: 2,
 							}, nil
@@ -89,12 +90,12 @@ func Test_combined_GetAttestationData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							return nil, errors.New("test error 1")
 						},
 					},
 					&mock.BeaconChain{
-						GetAttestationDataFn: func(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+						GetAttestationDataFn: func(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 							return nil, errors.New("test error 2")
 						},
 					},
@@ -207,7 +208,7 @@ func Test_combined_GetBlock(t *testing.T) {
 	}
 	type args struct {
 		ctx          context.Context
-		slot         uint64
+		slot         types.Slot
 		randaoReveal []byte
 		graffiti     []byte
 	}
@@ -223,7 +224,7 @@ func Test_combined_GetBlock(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							time.Sleep(time.Second / 2)
 							return &ethpb.BeaconBlock{
 								Slot: 1,
@@ -231,7 +232,7 @@ func Test_combined_GetBlock(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							time.Sleep(time.Second / 4)
 							return &ethpb.BeaconBlock{
 								Slot: 2,
@@ -239,7 +240,7 @@ func Test_combined_GetBlock(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							return &ethpb.BeaconBlock{
 								Slot: 3,
 							}, nil
@@ -256,12 +257,12 @@ func Test_combined_GetBlock(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							return nil, errors.New("test error")
 						},
 					},
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							return &ethpb.BeaconBlock{
 								Slot: 2,
 							}, nil
@@ -278,12 +279,12 @@ func Test_combined_GetBlock(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							return nil, errors.New("test error 1")
 						},
 					},
 					&mock.BeaconChain{
-						GetBlockFn: func(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+						GetBlockFn: func(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 							return nil, errors.New("test error 2")
 						},
 					},
@@ -395,8 +396,8 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 	}
 	type args struct {
 		ctx            context.Context
-		slot           uint64
-		committeeIndex uint64
+		slot           types.Slot
+		committeeIndex types.CommitteeIndex
 		publicKey      []byte
 		sig            []byte
 	}
@@ -412,7 +413,7 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							time.Sleep(time.Second / 2)
 							return &ethpb.AggregateAttestationAndProof{
 								AggregatorIndex: 1,
@@ -420,7 +421,7 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							time.Sleep(time.Second / 4)
 							return &ethpb.AggregateAttestationAndProof{
 								AggregatorIndex: 2,
@@ -428,7 +429,7 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 						},
 					},
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							return &ethpb.AggregateAttestationAndProof{
 								AggregatorIndex: 3,
 							}, nil
@@ -445,12 +446,12 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							return nil, errors.New("test error")
 						},
 					},
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							return &ethpb.AggregateAttestationAndProof{
 								AggregatorIndex: 2,
 							}, nil
@@ -467,12 +468,12 @@ func Test_combined_GetAggregateSelectionProof(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							return nil, errors.New("test error 1")
 						},
 					},
 					&mock.BeaconChain{
-						GetAggregateSelectionProofFn: func(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+						GetAggregateSelectionProofFn: func(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 							return nil, errors.New("test error 2")
 						},
 					},
@@ -663,7 +664,7 @@ func Test_combined_DomainData(t *testing.T) {
 	}
 	type args struct {
 		ctx    context.Context
-		epoch  uint64
+		epoch  types.Epoch
 		domain []byte
 	}
 	tests := []struct {
@@ -678,19 +679,19 @@ func Test_combined_DomainData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							time.Sleep(time.Second / 2)
 							return []byte("1"), nil
 						},
 					},
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							time.Sleep(time.Second / 4)
 							return []byte("2"), nil
 						},
 					},
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							return []byte("3"), nil
 						},
 					},
@@ -703,12 +704,12 @@ func Test_combined_DomainData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							return nil, errors.New("test error")
 						},
 					},
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							return []byte("2"), nil
 						},
 					},
@@ -721,12 +722,12 @@ func Test_combined_DomainData(t *testing.T) {
 			fields: fields{
 				beaconChains: []beaconchain.BeaconChain{
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							return nil, errors.New("test error 1")
 						},
 					},
 					&mock.BeaconChain{
-						DomainDataFn: func(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+						DomainDataFn: func(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 							return nil, errors.New("test error 2")
 						},
 					},

@@ -3,6 +3,8 @@ package grpcapi
 import (
 	"context"
 
+	types "github.com/prysmaticlabs/eth2-types"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"go.uber.org/zap"
 
@@ -38,7 +40,7 @@ func New(opts Options) beaconspotproto.BeaconSpotServiceServer {
 }
 
 func (h *handler) DomainData(ctx context.Context, req *beaconspotproto.DomainDataRequest) (*beaconspotproto.DomainDataResponse, error) {
-	domainData, err := h.beaconChainClient.DomainData(ctx, req.GetEpoch(), req.GetDomain())
+	domainData, err := h.beaconChainClient.DomainData(ctx, types.Epoch(req.GetEpoch()), req.GetDomain())
 	if err != nil {
 		return nil, err
 	}
@@ -54,10 +56,10 @@ func (h *handler) SubnetsSubscribe(ctx context.Context, req *beaconspotproto.Sub
 	subscription := make([]beaconchain.SubnetSubscription, len(req.GetSubscriptions()))
 	for i, sub := range req.GetSubscriptions() {
 		subscription[i] = beaconchain.SubnetSubscription{
-			ValidatorIndex:   sub.GetValidatorIndex(),
-			CommitteeIndex:   sub.GetCommitteeIndex(),
+			ValidatorIndex:   types.ValidatorIndex(sub.GetValidatorIndex()),
+			CommitteeIndex:   types.CommitteeIndex(sub.GetCommitteeIndex()),
 			CommitteesAtSlot: sub.GetCommitteesAtSlot(),
-			Slot:             sub.GetSlot(),
+			Slot:             types.Slot(sub.GetSlot()),
 			IsAggregator:     sub.GetIsAggregator(),
 		}
 	}

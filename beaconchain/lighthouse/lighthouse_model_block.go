@@ -6,7 +6,8 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 )
 
 type voluntaryExitsMessageModel struct {
@@ -26,8 +27,8 @@ func (m *voluntaryExitsMessageModel) toProto() (*ethpb.VoluntaryExit, error) {
 	}
 
 	return &ethpb.VoluntaryExit{
-		Epoch:          uint64(epoch),
-		ValidatorIndex: uint64(index),
+		Epoch:          types.Epoch(epoch),
+		ValidatorIndex: types.ValidatorIndex(index),
 	}, nil
 }
 
@@ -262,8 +263,8 @@ func (m *blockHeaderModel) toProto() (*ethpb.BeaconBlockHeader, error) {
 	}
 
 	return &ethpb.BeaconBlockHeader{
-		Slot:          uint64(slot),
-		ProposerIndex: uint64(proposerIndex),
+		Slot:          types.Slot(slot),
+		ProposerIndex: types.ValidatorIndex(proposerIndex),
 		ParentRoot:    parentRoot,
 		StateRoot:     stateRoot,
 		BodyRoot:      bodyRoot,
@@ -537,8 +538,8 @@ func (m *blockModel) toProto() (*ethpb.BeaconBlock, error) {
 	}
 
 	return &ethpb.BeaconBlock{
-		Slot:          uint64(slot),
-		ProposerIndex: uint64(proposerIndex),
+		Slot:          types.Slot(slot),
+		ProposerIndex: types.ValidatorIndex(proposerIndex),
 		ParentRoot:    parentRoot,
 		StateRoot:     stateRoot,
 		Body:          body,

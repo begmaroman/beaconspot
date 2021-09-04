@@ -13,9 +13,9 @@ import (
 
 	"github.com/bloxapp/eth2-key-manager/core"
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
 	"github.com/prysmaticlabs/prysm/beacon-chain/core/helpers"
-	pb "github.com/prysmaticlabs/prysm/proto/beacon/p2p/v1"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 	"github.com/prysmaticlabs/prysm/shared/bytesutil"
 	"go.uber.org/zap"
 
@@ -45,7 +45,7 @@ func New(logger *zap.Logger, network core.Network, addr string) beaconchain.Beac
 }
 
 // GetAttestationData returns attestation data
-func (n *lighthouseHTTP) GetAttestationData(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+func (n *lighthouseHTTP) GetAttestationData(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 	url := fmt.Sprintf("%s/eth/v1/validator/attestation_data?slot=%d&committee_index=%d", n.addr, slot, index)
 	n.logger.Info("LightHouse: generated URL to get attestation data", zap.String("url", url))
 
@@ -117,7 +117,7 @@ func (n *lighthouseHTTP) ProposeAttestation(_ context.Context, data *ethpb.Attes
 }
 
 // GetBlock returns block by the given data
-func (n *lighthouseHTTP) GetBlock(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+func (n *lighthouseHTTP) GetBlock(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 	url := fmt.Sprintf("%s/eth/v1/validator/blocks/%d?randao_reveal=%s&graffiti=%s",
 		n.addr, slot, "0x"+hex.EncodeToString(randaoReveal), "0x"+hex.EncodeToString(graffiti))
 	n.logger.Info("LightHouse: generated URL to get block", zap.String("url", url))
@@ -186,7 +186,7 @@ func (n *lighthouseHTTP) ProposeBlock(_ context.Context, signature []byte, block
 }
 
 // GetAggregateSelectionProof returns aggregated attestation
-func (n *lighthouseHTTP) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+func (n *lighthouseHTTP) GetAggregateSelectionProof(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	attestationData, err := n.GetAttestationData(ctx, slot, committeeIndex)
 	if err != nil {
 		n.logger.Error("LightHouse: failed to get attestation data", zap.Error(err))
@@ -309,7 +309,7 @@ func (n *lighthouseHTTP) SubnetsSubscribe(_ context.Context, subscriptions []bea
 }
 
 // DomainData returns domain data by the given request
-func (n *lighthouseHTTP) DomainData(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+func (n *lighthouseHTTP) DomainData(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 	data, err := n.getGenesisData(ctx)
 	if err != nil {
 		n.logger.Error("LightHouse: failed to get head fork", zap.Error(err))
@@ -328,7 +328,7 @@ func (n *lighthouseHTTP) DomainData(ctx context.Context, epoch uint64, domain []
 		return nil, errors.Wrap(err, "LightHouse: failed to decode genesis validators root")
 	}
 
-	dv, err := helpers.Domain(&pb.Fork{CurrentVersion: currentVersion}, epoch, bytesutil.ToBytes4(domain), genesisValidatorRoot)
+	dv, err := helpers.Domain(&ethpb.Fork{CurrentVersion: currentVersion}, epoch, bytesutil.ToBytes4(domain), genesisValidatorRoot)
 	if err != nil {
 		n.logger.Error("LightHouse: failed to get domain data", zap.Error(err), zap.Any("data", data.Data))
 		return nil, errors.Wrap(err, "LightHouse: failed to get domain data")

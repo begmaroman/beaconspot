@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	types "github.com/prysmaticlabs/eth2-types"
 
 	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 )
 
 func (h *handler) GetAttestation(ctx context.Context, req *beaconspotproto.GetAttestationRequest) (*beaconspotproto.GetAttestationResponse, error) {
-	attestationData, err := h.beaconChainClient.GetAttestationData(ctx, req.GetSlot(), req.GetCommitteeIndex())
+	attestationData, err := h.beaconChainClient.GetAttestationData(ctx, types.Slot(req.GetSlot()), types.CommitteeIndex(req.GetCommitteeIndex()))
 	if err != nil {
 		return nil, err
 	}

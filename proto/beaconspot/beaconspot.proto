@@ -4,9 +4,11 @@ option go_package = "github.com/begmaroman/beaconspot/proto/beaconspot;beaconspo
 
 package beaconspotproto;
 
-import "eth/v1alpha1/validator.proto";
-import "eth/v1alpha1/attestation.proto";
-import "eth/v1alpha1/beacon_block.proto";
+import "proto/eth/ext/options.proto";
+
+import "proto/prysm/v1alpha1/validator.proto";
+import "proto/prysm/v1alpha1/attestation.proto";
+import "proto/prysm/v1alpha1/beacon_block.proto";
 import "google/protobuf/empty.proto";
 import "github.com/begmaroman/beaconspot/proto/health/health.proto";
 import "github.com/begmaroman/beaconspot/proto/status/status.proto";
@@ -45,7 +47,7 @@ service BeaconSpotService {
 
 // DomainData operation
 message DomainDataRequest {
-    uint64 epoch = 1;
+    uint64 epoch = 1 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.Epoch"];
     bytes domain = 2;
 }
 
@@ -58,8 +60,8 @@ message DomainDataResponse {
 
 // GetAttestation operation
 message GetAttestationRequest {
-    uint64 slot = 1;
-    uint64 committee_index = 2;
+    uint64 slot = 1 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.Slot"];
+    uint64 committee_index = 2 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.CommitteeIndex"];
 }
 
 message GetAttestationResponse {
@@ -85,8 +87,8 @@ message ProposeAttestationResponse {
 
 // GetAggregateSelectionProof operation
 message GetAggregateSelectionProofRequest {
-    uint64 slot = 1;
-    uint64 committee_index = 2;
+    uint64 slot = 1 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.Slot"];
+    uint64 committee_index = 2 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.CommitteeIndex"];
     bytes public_key = 3;
     bytes signature = 4;
 }
@@ -113,7 +115,7 @@ message SubmitSignedAggregateSelectionProofResponse {
 
 // GetBlock operation
 message GetBlockRequest {
-    uint64 slot = 1;
+    uint64 slot = 1 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.Slot"];
     bytes randao_reveal = 2;
     bytes graffiti = 3;
 }
@@ -151,10 +153,10 @@ message SubnetsSubscribeResponse {
 }
 
 message SubnetSubscription {
-    uint64 validator_index = 1;
-    uint64 committee_index = 2;
+    uint64 validator_index = 1 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.ValidatorIndex"];
+    uint64 committee_index = 2 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.CommitteeIndex"];
     uint64 committees_at_slot = 3;
-    uint64 slot = 4;
+    uint64 slot = 4 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/eth2-types.Slot"];
     bool is_aggregator = 5;
 }
 

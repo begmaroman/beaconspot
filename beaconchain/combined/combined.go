@@ -7,7 +7,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	types "github.com/prysmaticlabs/eth2-types"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 
 	"github.com/begmaroman/beaconspot/beaconchain"
 )
@@ -25,7 +26,7 @@ func New(beaconChains ...beaconchain.BeaconChain) beaconchain.BeaconChain {
 }
 
 // GetAttestationData returns attestation data
-func (c *combined) GetAttestationData(ctx context.Context, slot, index uint64) (*ethpb.AttestationData, error) {
+func (c *combined) GetAttestationData(ctx context.Context, slot types.Slot, index types.CommitteeIndex) (*ethpb.AttestationData, error) {
 	type result struct {
 		attData *ethpb.AttestationData
 		err     error
@@ -86,7 +87,7 @@ func (c *combined) ProposeAttestation(ctx context.Context, data *ethpb.Attestati
 }
 
 // GetBlock returns block by the given data
-func (c *combined) GetBlock(ctx context.Context, slot uint64, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
+func (c *combined) GetBlock(ctx context.Context, slot types.Slot, randaoReveal, graffiti []byte) (*ethpb.BeaconBlock, error) {
 	type result struct {
 		block *ethpb.BeaconBlock
 		err   error
@@ -147,7 +148,7 @@ func (c *combined) ProposeBlock(ctx context.Context, signature []byte, block *et
 }
 
 // GetAggregateSelectionProof returns aggregated attestation
-func (c *combined) GetAggregateSelectionProof(ctx context.Context, slot, committeeIndex uint64, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
+func (c *combined) GetAggregateSelectionProof(ctx context.Context, slot types.Slot, committeeIndex types.CommitteeIndex, publicKey, sig []byte) (*ethpb.AggregateAttestationAndProof, error) {
 	type result struct {
 		res *ethpb.AggregateAttestationAndProof
 		err error
@@ -233,7 +234,7 @@ func (c *combined) SubnetsSubscribe(ctx context.Context, subscriptions []beaconc
 }
 
 // DomainData returns domain data by the given request
-func (c *combined) DomainData(ctx context.Context, epoch uint64, domain []byte) ([]byte, error) {
+func (c *combined) DomainData(ctx context.Context, epoch types.Epoch, domain []byte) ([]byte, error) {
 	type result struct {
 		res []byte
 		err error

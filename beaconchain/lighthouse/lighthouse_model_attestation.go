@@ -5,8 +5,10 @@ import (
 	"strconv"
 	"strings"
 
+	types "github.com/prysmaticlabs/eth2-types"
+
 	"github.com/pkg/errors"
-	ethpb "github.com/prysmaticlabs/ethereumapis/eth/v1alpha1"
+	ethpb "github.com/prysmaticlabs/prysm/proto/prysm/v1alpha1"
 )
 
 type checkpointModel struct {
@@ -26,7 +28,7 @@ func (m *checkpointModel) toProto() (*ethpb.Checkpoint, error) {
 	}
 
 	return &ethpb.Checkpoint{
-		Epoch: uint64(epoch),
+		Epoch: types.Epoch(epoch),
 		Root:  root,
 	}, nil
 }
@@ -73,8 +75,8 @@ func (m *attestationDataModel) toProto() (*ethpb.AttestationData, error) {
 	}
 
 	return &ethpb.AttestationData{
-		Slot:            uint64(dataSlot),
-		CommitteeIndex:  uint64(dataIndex),
+		Slot:            types.Slot(dataSlot),
+		CommitteeIndex:  types.CommitteeIndex(dataIndex),
 		BeaconBlockRoot: dataBeaconBlockRoot,
 		Source:          source,
 		Target:          target,

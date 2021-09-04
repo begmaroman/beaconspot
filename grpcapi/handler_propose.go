@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	types "github.com/prysmaticlabs/eth2-types"
 
 	beaconspotproto "github.com/begmaroman/beaconspot/proto/beaconspot"
 )
 
 func (h *handler) GetBlock(ctx context.Context, req *beaconspotproto.GetBlockRequest) (*beaconspotproto.GetBlockResponse, error) {
-	block, err := h.beaconChainClient.GetBlock(ctx, req.GetSlot(), req.GetRandaoReveal(), req.GetGraffiti())
+	block, err := h.beaconChainClient.GetBlock(ctx, types.Slot(req.GetSlot()), req.GetRandaoReveal(), req.GetGraffiti())
 	if err != nil {
 		return nil, err
 	}
